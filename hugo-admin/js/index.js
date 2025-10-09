@@ -49,7 +49,7 @@ async function loadAdminStats() {
   } catch (error) {
     console.error("Error fetching dashboard analytics:", error);
     alert("Error fetching dashboard analytics.");
-    // window.location.href = "login.html";
+    window.location.href = "login.html";
   }
 
   // get admin info
@@ -72,12 +72,12 @@ async function loadAdminStats() {
     } else {
       console.error("error fetching admin details", data.message);
       alert("error fetching admin details");
-      // window.location.href = "login.html";
+      window.location.href = "login.html";
     }
   } catch (error) {
     console.error("error fetching admin details", error);
     alert("unable to fetch admin details");
-    // window.location.href = "login.html";
+    window.location.href = "login.html";
   }
 }
 window.addEventListener("DOMContentLoaded", loadAdminStats);
