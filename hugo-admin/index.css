@@ -1,0 +1,27 @@
+.scrollBar-remove {
+  scrollbar-width: none;
+}
+
+.background {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0d9488 100%);
+  transition: all 1s;
+}
+
+.hoverd:hover {
+  background: linear-gradient(135deg, #0284c7 0%, #0f766e 100%);
+  transition: all 1s;
+}
+
+.borderButton {
+  border-bottom: 4px solid transparent; /* define thickness */
+  border-image: linear-gradient(135deg, #0ea5e9 0%, #0d9488 100%);
+  border-image-slice: 1;
+  transition: all 1s;
+}
+
+.borderhover:hover {
+  border-bottom: 4px solid transparent;
+  border-image: linear-gradient(135deg, #0284c7 0%, #0f766e 100%);
+  border-image-slice: 1;
+  transition: all 0.11s;
+}
