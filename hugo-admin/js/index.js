@@ -716,7 +716,6 @@ settingsBtn.forEach((btn) => {
           <option value="failed">failed</option>
         `
           : `
-           <option value="pending">pending</option>
           <option value="successful">successful</option>
           <option value="failed">failed</option>
         `;
@@ -1071,7 +1070,7 @@ settingsBtn.forEach((btn) => {
 
   function statusBadgeClass(status) {
     const s = (status || "").toLowerCase();
-    if (["pending", "failed", "successful"].includes(s))
+    if (["approved", "failed", "successful"].includes(s))
       return "bg-green-100 text-green-700";
     if (s === "pending") return "bg-yellow-100 text-yellow-800";
     if (["failed", "completed"].includes(s)) return "bg-gray-200 text-gray-700";
