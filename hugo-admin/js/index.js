@@ -218,10 +218,12 @@ editUserForm.addEventListener("submit", async (e) => {
     saveBtn.textContent = "Save";
     editUserModal.classList.remove("scale-100");
     editUserModal.classList.add("scale-0");
+    editBtn.disabled = false;
     loadAllUsers();
   } catch (err) {
     console.error(err);
     alert("❌ Failed to update user.");
+    editBtn.disabled = false;
   }
 });
 
