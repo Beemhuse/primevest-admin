@@ -711,7 +711,6 @@ settingsBtn.forEach((btn) => {
       statusSelect.innerHTML =
         type === "deposit"
           ? `
-          <option value="pending">pending</option>
           <option value="successful">successful</option>
           <option value="failed">failed</option>
         `
@@ -1009,30 +1008,6 @@ settingsBtn.forEach((btn) => {
     return card;
   }
 
-  // --- PATCH HELPERS ---
-  // async function updateDepositStatus(id, status) {
-  //   const res = await fetch(`${API_BASE_URL}/admin/deposits/${id}/status`, {
-  //     method: "PATCH",
-  //     headers: { "Content-Type": "application/json" },
-  //     credentials: "include",
-  //     body: JSON.stringify({ status }),
-  //   });
-  //   const payload = await res.json();
-  //   if (!res.ok || !payload.success) throw new Error(payload.message || "Failed to update deposit");
-  //   return payload;
-  // }
-
-  // async function updateWithdrawalStatus(id, status) {
-  //   const res = await fetch(`${API_BASE_URL}/admin/withdrawals/${id}/status`, {
-  //     method: "PATCH",
-  //     headers: { "Content-Type": "application/json" },
-  //     credentials: "include",
-  //     body: JSON.stringify({ status }),
-  //   });
-  //   const payload = await res.json();
-  //   if (!res.ok || !payload.success) throw new Error(payload.message || "Failed to update withdrawal");
-  //   return payload;
-  // }
   async function updateDepositStatus(id, status) {
     try {
       const res = await fetch(`${API_BASE_URL}/admin/deposits/${id}/status`, {
@@ -1094,7 +1069,7 @@ settingsBtn.forEach((btn) => {
 
   function statusBadgeClass(status) {
     const s = (status || "").toLowerCase();
-    if (["approved", "active", "successful"].includes(s))
+    if (["pending", "failed", "successful"].includes(s))
       return "bg-green-100 text-green-700";
     if (s === "pending") return "bg-yellow-100 text-yellow-800";
     if (["failed", "completed"].includes(s)) return "bg-gray-200 text-gray-700";
