@@ -30,7 +30,7 @@ async function loadAdminStats() {
         headers: { "content-type": "application/json" },
         credentials: "include",
         cache: "no-store",
-      },
+      }
     );
 
     const data = await response.json();
@@ -49,7 +49,7 @@ async function loadAdminStats() {
   } catch (error) {
     console.error("Error fetching dashboard analytics:", error);
     alert("Error fetching dashboard analytics.");
-    window.location.href = "login.html";
+    // window.location.href = "login.html";
   }
 
   // get admin info
@@ -61,7 +61,7 @@ async function loadAdminStats() {
         headers: { "content-type": "application/json" },
         credentials: "include",
         cache: "no-store",
-      },
+      }
     );
 
     const data = await response.json();
@@ -72,12 +72,12 @@ async function loadAdminStats() {
     } else {
       console.error("error fetching admin details", data.message);
       alert("error fetching admin details");
-      window.location.href = "login.html";
+      // window.location.href = "login.html";
     }
   } catch (error) {
     console.error("error fetching admin details", error);
     alert("unable to fetch admin details");
-    window.location.href = "login.html";
+    // window.location.href = "login.html";
   }
 }
 window.addEventListener("DOMContentLoaded", loadAdminStats);
@@ -87,7 +87,7 @@ const editUserForm = document.getElementById("editUserForm");
 const accountStatusInput = document.getElementById("accountStatusInput");
 const accountBalanceInput = document.getElementById("accountBalanceInput");
 const investmentBalanceInput = document.getElementById(
-  "investmentBalanceInput",
+  "investmentBalanceInput"
 );
 const welfareBalanceInput = document.getElementById("welfareBalanceInput");
 const cancelEdit = document.getElementById("cancelEdit");
@@ -106,7 +106,7 @@ async function loadAllUsers() {
         headers: { "content-type": "application/json" },
         credentials: "include",
         cache: "no-store",
-      },
+      }
     );
 
     const data = await res.json();
@@ -126,11 +126,21 @@ async function loadAllUsers() {
         "w-full px-4 py-2 border-b flex items-center justify-between hover:bg-gray-50 transition-all text-sm";
 
       userRow.innerHTML = `
-        <span class="text-gray-700 w-[14%] text-center truncate">${user.username}</span>
-        <span class="text-gray-700 w-[14%] text-center truncate">${user.phoneNumber}</span>
-        <span class="text-gray-700 w-[14%] text-center truncate">${user.welfareBalance || "N/A"}</span>
-        <span class="text-gray-700 w-[14%] text-center truncate">${user.investmentBalance || "N/A"}</span>
-        <span class="text-gray-700 w-[14%] text-center truncate">${user.role || "N/A"}</span>
+        <span class="text-gray-700 w-[14%] text-center truncate">${
+          user.username
+        }</span>
+        <span class="text-gray-700 w-[14%] text-center truncate">${
+          user.phoneNumber
+        }</span>
+        <span class="text-gray-700 w-[14%] text-center truncate">${
+          user.welfareBalance || "N/A"
+        }</span>
+        <span class="text-gray-700 w-[14%] text-center truncate">${
+          user.investmentBalance || "N/A"
+        }</span>
+        <span class="text-gray-700 w-[14%] text-center truncate">${
+          user.role || "N/A"
+        }</span>
         <span class="text-gray-700 w-[14%] text-center truncate">
           <p class="text-green-700 font-semibold w-max ${
             user.accountStatus === "active"
@@ -141,7 +151,9 @@ async function loadAllUsers() {
         <span class="text-gray-500 w-[14%] relative flex items-center justify-center group cursor-pointer dropdown">
   <i class="fas fa-ellipsis-v"></i>
   <span class="absolute z-10 flex flex-col top-4 -right-9 bg-white shadow-lg rounded-md opacity-0 pointer-events-none group-hover:opacity-100 p-2 gap-2 transition-all duration-200 dropdown-menu">
-    <span class="flex items-center gap-2 border-b p-2 hover:text-blue-500 cursor-pointer group hover:bg-blue-100 rounded-md transition-all editUserBtn" data-id="${user._id}">
+    <span class="flex items-center gap-2 border-b p-2 hover:text-blue-500 cursor-pointer group hover:bg-blue-100 rounded-md transition-all editUserBtn" data-id="${
+      user._id
+    }">
       <i class="fas fa-edit text-[10px]"></i>
       <span class="text-[10px] font-semibold">Edit</span>
     </span>
@@ -207,7 +219,7 @@ editUserForm.addEventListener("submit", async (e) => {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(body),
-      },
+      }
     );
 
     const data = await res.json();
@@ -288,11 +300,15 @@ function renderPlans(plans) {
       <span class="text-gray-500 w-1/6 cursor-pointer relative hover:bg-gray-100 group flex items-center justify-center w-8 h-8 border rounded-full">
         <i class="fas fa-ellipsis-v"></i>
         <span class="absolute z-10 flex flex-col top-6 -right-9 bg-white shadow-lg rounded-md scale-0 group-hover:scale-100 transition-all duration-300 p-2 gap-2">
-          <span class="flex items-center gap-2 border-b p-2 hover:text-blue-500 cursor-pointer hover:bg-blue-100 transition-all rounded-md duration-300 mb-2 editPlanBtn" data-id="${plan._id}">
+          <span class="flex items-center gap-2 border-b p-2 hover:text-blue-500 cursor-pointer hover:bg-blue-100 transition-all rounded-md duration-300 mb-2 editPlanBtn" data-id="${
+            plan._id
+          }">
             <i class="fas fa-edit text-[10px]"></i>
             <span class="text-[10px] font-semibold">Edit</span>
           </span>
-          <span class="flex items-center gap-2 border-b p-2 rounded-md hover:text-red-500 cursor-pointer hover:bg-red-100 transition-all duration-300 deletePlanBtn" data-id="${plan._id}">
+          <span class="flex items-center gap-2 border-b p-2 rounded-md hover:text-red-500 cursor-pointer hover:bg-red-100 transition-all duration-300 deletePlanBtn" data-id="${
+            plan._id
+          }">
             <i class="fas fa-trash text-[10px]"></i>
             <span class="text-[10px] font-semibold">Delete</span>
           </span>
@@ -431,13 +447,10 @@ async function openEditModal(id) {
 }
 
 // 🟩 Close Modal
-closeModal.addEventListener("click", () =>
-  planModal.classList.add("hidden")
-);
+closeModal.addEventListener("click", () => planModal.classList.add("hidden"));
 
 // 🟩 Initial Fetch
 fetchPlans();
-
 
 // financial services
 
@@ -490,9 +503,13 @@ function createInvestmentCard(investment) {
     "w-full flex p-4 items-center justify-between cursor-pointer";
 
   summary.innerHTML = `
-    <span class="text-gray-700 font-medium">${investment.plan?.title || "N/A"}</span>
+    <span class="text-gray-700 font-medium">${
+      investment.plan?.title || "N/A"
+    }</span>
     <span class="text-gray-700">${investment.user?.name}</span>
-    <span class="text-gray-700">${investment.plan?.durationDays || 0} days</span>
+    <span class="text-gray-700">${
+      investment.plan?.durationDays || 0
+    } days</span>
     <span class="text-gray-700">₦${investment.amount || 0}</span>
     <span class="text-gray-700">${formatDate(investment.startDate)}</span>
     <span class="text-gray-700">${formatDate(investment.endDate)}</span>
@@ -535,12 +552,14 @@ function createInvestmentCard(investment) {
     .addEventListener("click", () => details.classList.toggle("hidden"));
 
   // Edit toggle
-  summary.querySelector(".editBtn-investments").addEventListener("click", () => {
-    currentEditingId = investment._id;
-    statusSelect.value = investment.status;
-    editModal.classList.remove("hidden");
-    editModal.classList.add("flex");
-  });
+  summary
+    .querySelector(".editBtn-investments")
+    .addEventListener("click", () => {
+      currentEditingId = investment._id;
+      statusSelect.value = investment.status;
+      editModal.classList.remove("hidden");
+      editModal.classList.add("flex");
+    });
 
   card.appendChild(summary);
   card.appendChild(details);
@@ -559,7 +578,7 @@ async function updateInvestmentStatus(id, status) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ status }),
-      },
+      }
     );
 
     const result = await response.json();
@@ -634,15 +653,19 @@ settingsBtn.forEach((btn) => {
 
   // Modal & controls (scoped)
   const editModal = document.getElementById("editModal2");
-  const modalTitle = editModal?.querySelector("#modalTitle2") || document.getElementById("modalTitle2");
+  const modalTitle =
+    editModal?.querySelector("#modalTitle2") ||
+    document.getElementById("modalTitle2");
   // prefer modal-scoped select/button if present
-  const statusSelect = editModal?.querySelector("#statusSelect2") || document.getElementById("statusSelect2");
-  const cancelEditBtn = editModal?.querySelector("#cancelEdit2") || document.getElementById("cancelEdit2");
+  const statusSelect =
+    editModal?.querySelector("#statusSelect2") ||
+    document.getElementById("statusSelect2");
+  const cancelEditBtn =
+    editModal?.querySelector("#cancelEdit2") ||
+    document.getElementById("cancelEdit2");
 
   // Robust save button lookup (tries several common ids so you don't have to edit HTML immediately)
-  const saveEditBtn_2 =
-    document.getElementById("saveEditTransaction");
-
+  const saveEditBtn_2 = document.getElementById("saveEditTransaction");
 
   // State for modal
   let currentEdit = null; // { type: 'deposit'|'withdrawal', id: '...' }
@@ -677,7 +700,10 @@ settingsBtn.forEach((btn) => {
   // --- Modal helpers ---
   function openModal(type, id, currentStatus) {
     currentEdit = { type, id };
-    if (modalTitle) modalTitle.textContent = `${type === "deposit" ? "Edit Deposit" : "Edit Withdrawal"} Status`;
+    if (modalTitle)
+      modalTitle.textContent = `${
+        type === "deposit" ? "Edit Deposit" : "Edit Withdrawal"
+      } Status`;
 
     if (!statusSelect) {
       console.warn("statusSelect not found in DOM");
@@ -693,7 +719,8 @@ settingsBtn.forEach((btn) => {
           <option value="successful">successful</option>
           <option value="failed">failed</option>
         `;
-      statusSelect.value = currentStatus || statusSelect.querySelector("option").value;
+      statusSelect.value =
+        currentStatus || statusSelect.querySelector("option").value;
     }
 
     if (editModal) {
@@ -726,7 +753,7 @@ settingsBtn.forEach((btn) => {
     );
   } else {
     saveEditBtn_2.addEventListener("click", async () => {
-      console.log('clicked')
+      console.log("clicked");
       if (!currentEdit) return;
       if (!statusSelect) {
         alert("Status select not found");
@@ -769,12 +796,18 @@ settingsBtn.forEach((btn) => {
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const payload = await res.json();
-      if (!payload.success || !Array.isArray(payload.data) || payload.data.length === 0) {
+      if (
+        !payload.success ||
+        !Array.isArray(payload.data) ||
+        payload.data.length === 0
+      ) {
         showMessage(depositContainer, "No deposits yet.", "info");
         return;
       }
       depositContainer.innerHTML = "";
-      payload.data.forEach((d) => depositContainer.appendChild(createDepositCard(d)));
+      payload.data.forEach((d) =>
+        depositContainer.appendChild(createDepositCard(d))
+      );
     } catch (err) {
       console.error("Error fetching deposits:", err);
       showMessage(depositContainer, "Error fetching deposits.", "error");
@@ -792,12 +825,18 @@ settingsBtn.forEach((btn) => {
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const payload = await res.json();
-      if (!payload.success || !Array.isArray(payload.data) || payload.data.length === 0) {
+      if (
+        !payload.success ||
+        !Array.isArray(payload.data) ||
+        payload.data.length === 0
+      ) {
         showMessage(withdrawalContainer, "No withdrawals yet.", "info");
         return;
       }
       withdrawalContainer.innerHTML = "";
-      payload.data.forEach((w) => withdrawalContainer.appendChild(createWithdrawalCard(w)));
+      payload.data.forEach((w) =>
+        withdrawalContainer.appendChild(createWithdrawalCard(w))
+      );
     } catch (err) {
       console.error("Error fetching withdrawals:", err);
       showMessage(withdrawalContainer, "Error fetching withdrawals.", "error");
@@ -807,11 +846,13 @@ settingsBtn.forEach((btn) => {
   // --- CREATE DEPOSIT CARD ---
   function createDepositCard(d) {
     const card = document.createElement("div");
-    card.className = "w-full flex flex-col border-b hover:bg-gray-50 transition-all duration-200";
+    card.className =
+      "w-full flex flex-col border-b hover:bg-gray-50 transition-all duration-200";
 
     const row = document.createElement("div");
     row.className = "w-full flex p-4 items-center justify-between";
-    const proofUrl = d.proofOfPayment?.asset?.url || d.proofOfPayment?.url || "";
+    const proofUrl =
+      d.proofOfPayment?.asset?.url || d.proofOfPayment?.url || "";
 
     row.innerHTML = `
       <span class="text-gray-700 font-medium">${escapeText(d._id)}</span>
@@ -820,13 +861,21 @@ settingsBtn.forEach((btn) => {
       <span class="text-gray-700">${escapeText(d.balanceType || "—")}</span>
       <span class="text-gray-700">${formatDate(d.fundedAt)}</span>
       <span class="text-gray-700">${escapeText(d.senderName || "—")}</span>
-      <span class="px-2 py-1 text-xs rounded-full ${statusBadgeClass(d.status)}">${escapeText(d.status)}</span>
+      <span class="px-2 py-1 text-xs rounded-full ${statusBadgeClass(
+        d.status
+      )}">${escapeText(d.status)}</span>
 
-      <span class="relative flex items-center justify-center w-8 h-8 border rounded-full cursor-pointer action-toggle" data-id="${d._id}">
+      <span class="relative flex items-center justify-center w-8 h-8 border rounded-full cursor-pointer action-toggle" data-id="${
+        d._id
+      }">
         <i class="fas fa-ellipsis-v text-gray-600"></i>
         <div class="absolute top-8 right-0 z-10 w-36 bg-white shadow-lg rounded-md hidden p-2 card-dropdown">
-          <div class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-green-100 editBtn-deposit" data-id="${d._id}">Edit</div>
-          <div class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-blue-100 expandBtn" data-id="${d._id}">Expand</div>
+          <div class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-green-100 editBtn-deposit" data-id="${
+            d._id
+          }">Edit</div>
+          <div class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-blue-100 expandBtn" data-id="${
+            d._id
+          }">Expand</div>
         </div>
       </span>
     `;
@@ -834,10 +883,16 @@ settingsBtn.forEach((btn) => {
     const details = document.createElement("div");
     details.className = "hidden px-6 pb-4 text-sm text-gray-600 bg-gray-50";
     details.innerHTML = `
-      <p><strong>User phone:</strong> ${escapeText(d.user?.phoneNumber || "—")}</p>
+      <p><strong>User phone:</strong> ${escapeText(
+        d.user?.phoneNumber || "—"
+      )}</p>
       <p><strong>Proof of payment:</strong></p>
       <div class="mt-2">
-        ${proofUrl ? `<img src="${proofUrl}" alt="proof" class="max-w-xs border rounded" onerror="this.style.display='none'"/>` : `<span class="text-gray-500">No proof provided</span>`}
+        ${
+          proofUrl
+            ? `<img src="${proofUrl}" alt="proof" class="max-w-xs border rounded" onerror="this.style.display='none'"/>`
+            : `<span class="text-gray-500">No proof provided</span>`
+        }
       </div>
     `;
 
@@ -853,9 +908,11 @@ settingsBtn.forEach((btn) => {
     // toggle dropdown (scoped to deposits)
     toggle.addEventListener("click", (e) => {
       e.stopPropagation();
-      document.querySelectorAll("#depositContainer .card-dropdown").forEach((el) => {
-        if (el !== dropdown) el.classList.add("hidden");
-      });
+      document
+        .querySelectorAll("#depositContainer .card-dropdown")
+        .forEach((el) => {
+          if (el !== dropdown) el.classList.add("hidden");
+        });
       dropdown.classList.toggle("hidden");
     });
 
@@ -877,7 +934,8 @@ settingsBtn.forEach((btn) => {
   // --- CREATE WITHDRAWAL CARD ---
   function createWithdrawalCard(w) {
     const card = document.createElement("div");
-    card.className = "w-full flex flex-col border-b hover:bg-gray-50 transition-all duration-200";
+    card.className =
+      "w-full flex flex-col border-b hover:bg-gray-50 transition-all duration-200";
 
     const row = document.createElement("div");
     row.className = "w-full flex p-4 items-center justify-between";
@@ -887,13 +945,21 @@ settingsBtn.forEach((btn) => {
       <span class="text-gray-700">₦${escapeText(w.amount ?? 0)}</span>
       <span class="text-gray-700">${escapeText(w.balanceType || "—")}</span>
       <span class="text-gray-700">${formatDate(w.withdrawnAt)}</span>
-      <span class="px-2 py-1 text-xs rounded-full ${statusBadgeClass(w.status)}">${escapeText(w.status)}</span>
+      <span class="px-2 py-1 text-xs rounded-full ${statusBadgeClass(
+        w.status
+      )}">${escapeText(w.status)}</span>
 
-      <span class="relative flex items-center justify-center w-8 h-8 border rounded-full cursor-pointer action-toggle" data-id="${w._id}">
+      <span class="relative flex items-center justify-center w-8 h-8 border rounded-full cursor-pointer action-toggle" data-id="${
+        w._id
+      }">
         <i class="fas fa-ellipsis-v text-gray-600"></i>
         <div class="absolute top-8 right-0 z-10 w-36 bg-white shadow-lg rounded-md hidden p-2 card-dropdown">
-          <div class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-green-100 editBtn-withdrawal" data-id="${w._id}">Edit</div>
-          <div class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-blue-100 expandBtn" data-id="${w._id}">Expand</div>
+          <div class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-green-100 editBtn-withdrawal" data-id="${
+            w._id
+          }">Edit</div>
+          <div class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-blue-100 expandBtn" data-id="${
+            w._id
+          }">Expand</div>
         </div>
       </span>
     `;
@@ -901,8 +967,12 @@ settingsBtn.forEach((btn) => {
     const details = document.createElement("div");
     details.className = "hidden px-6 pb-4 text-sm text-gray-600 bg-gray-50";
     details.innerHTML = `
-      <p><strong>User phone:</strong> ${escapeText(w.user?.phoneNumber || "—")}</p>
-      <p><strong>Account status:</strong> ${escapeText(w.user?.accountStatus || "—")}</p>
+      <p><strong>User phone:</strong> ${escapeText(
+        w.user?.phoneNumber || "—"
+      )}</p>
+      <p><strong>Account status:</strong> ${escapeText(
+        w.user?.accountStatus || "—"
+      )}</p>
       <p><strong>Request ID:</strong> ${escapeText(w._id)}</p>
     `;
 
@@ -916,9 +986,11 @@ settingsBtn.forEach((btn) => {
 
     toggle.addEventListener("click", (e) => {
       e.stopPropagation();
-      document.querySelectorAll("#withdrawalContainer .card-dropdown").forEach((el) => {
-        if (el !== dropdown) el.classList.add("hidden");
-      });
+      document
+        .querySelectorAll("#withdrawalContainer .card-dropdown")
+        .forEach((el) => {
+          if (el !== dropdown) el.classList.add("hidden");
+        });
       dropdown.classList.toggle("hidden");
     });
 
@@ -936,7 +1008,6 @@ settingsBtn.forEach((btn) => {
 
     return card;
   }
-  
 
   // --- PATCH HELPERS ---
   // async function updateDepositStatus(id, status) {
@@ -963,59 +1034,68 @@ settingsBtn.forEach((btn) => {
   //   return payload;
   // }
   async function updateDepositStatus(id, status) {
-  try {
-    const res = await fetch(`${API_BASE_URL}/admin/deposits/${id}/status`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ status }),
-    });
+    try {
+      const res = await fetch(`${API_BASE_URL}/admin/deposits/${id}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ status }),
+      });
 
-    const payload = await res.json().catch(() => ({}));
-    console.log("Deposit PATCH:", res.status, payload);
+      const payload = await res.json().catch(() => ({}));
+      console.log("Deposit PATCH:", res.status, payload);
 
-    if (!res.ok || !payload.success) {
-      showToast(payload.message || `Error (${res.status}) updating deposit`, "error");
-      throw new Error(payload.message || "Failed to update deposit");
+      if (!res.ok || !payload.success) {
+        showToast(
+          payload.message || `Error (${res.status}) updating deposit`,
+          "error"
+        );
+        throw new Error(payload.message || "Failed to update deposit");
+      }
+
+      return payload;
+    } catch (err) {
+      console.error("Deposit update error:", err);
+      showToast(err.message, "error");
+      throw err;
     }
-
-    return payload;
-  } catch (err) {
-    console.error("Deposit update error:", err);
-    showToast(err.message, "error");
-    throw err;
   }
-}
 
-async function updateWithdrawalStatus(id, status) {
-  try {
-    const res = await fetch(`${API_BASE_URL}/admin/withdrawals/${id}/status`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ status }),
-    });
+  async function updateWithdrawalStatus(id, status) {
+    try {
+      const res = await fetch(
+        `${API_BASE_URL}/admin/withdrawals/${id}/status`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ status }),
+        }
+      );
 
-    const payload = await res.json().catch(() => ({}));
-    console.log("Withdrawal PATCH:", res.status, payload);
+      const payload = await res.json().catch(() => ({}));
+      console.log("Withdrawal PATCH:", res.status, payload);
 
-    if (!res.ok || !payload.success) {
-      showToast(payload.message || `Error (${res.status}) updating withdrawal`, "error");
-      throw new Error(payload.message || "Failed to update withdrawal");
+      if (!res.ok || !payload.success) {
+        showToast(
+          payload.message || `Error (${res.status}) updating withdrawal`,
+          "error"
+        );
+        throw new Error(payload.message || "Failed to update withdrawal");
+      }
+
+      return payload;
+    } catch (err) {
+      console.error("Withdrawal update error:", err);
+      showToast(err.message, "error");
+      throw err;
     }
-
-    return payload;
-  } catch (err) {
-    console.error("Withdrawal update error:", err);
-    showToast(err.message, "error");
-    throw err;
   }
-}
-
 
   function statusBadgeClass(status) {
     const s = (status || "").toLowerCase();
-    if (["approved", "active", "successful"].includes(s)) return "bg-green-100 text-green-700";
+    if (["approved", "active", "successful"].includes(s))
+      return "bg-green-100 text-green-700";
     if (s === "pending") return "bg-yellow-100 text-yellow-800";
     if (["failed", "completed"].includes(s)) return "bg-gray-200 text-gray-700";
     return "bg-gray-100 text-gray-700";
@@ -1023,12 +1103,17 @@ async function updateWithdrawalStatus(id, status) {
 
   function escapeText(input) {
     if (input === undefined || input === null) return "";
-    return String(input).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return String(input)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
   }
 
   // close open dropdowns if clicking anywhere else
   document.addEventListener("click", () => {
-    document.querySelectorAll(".card-dropdown").forEach((el) => el.classList.add("hidden"));
+    document
+      .querySelectorAll(".card-dropdown")
+      .forEach((el) => el.classList.add("hidden"));
   });
 
   document.addEventListener("DOMContentLoaded", () => {
