@@ -188,7 +188,7 @@ cancelEdit.addEventListener("click", () => {
 // 🟩 Submit Edit (PATCH)
 editUserForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const saveBtn = document.getElementById("saveEdit");
+  const saveBtn = document.getElementById("saveEditUser");
   saveBtn.textContent = "Updating...";
   saveBtn.disabled = true;
 
@@ -218,12 +218,11 @@ editUserForm.addEventListener("submit", async (e) => {
     saveBtn.textContent = "Save";
     editUserModal.classList.remove("scale-100");
     editUserModal.classList.add("scale-0");
-    editBtn.disabled = false;
+    saveBtn.disabled = false;
     loadAllUsers();
   } catch (err) {
     console.error(err);
     alert("❌ Failed to update user.");
-    editBtn.disabled = false;
   }
 });
 
