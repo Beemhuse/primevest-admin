@@ -504,15 +504,15 @@ function createInvestmentCard(investment) {
 
   summary.innerHTML = `
     <span class="text-gray-700 font-medium">${
-      investment.plan?.title || "N/A"
+      investment.plan || "N/A"
     }</span>
-    <span class="text-gray-700">${investment.user?.name}</span>
+    <span class="text-gray-700">${investment.user?.username}</span>
     <span class="text-gray-700">${
-      investment.plan?.durationDays || 0
+      investment.profitEarned || 0
     } days</span>
     <span class="text-gray-700">₦${investment.amount || 0}</span>
-    <span class="text-gray-700">${formatDate(investment.startDate)}</span>
-    <span class="text-gray-700">${formatDate(investment.endDate)}</span>
+    <span class="text-gray-700">${formatDate(investment.createdAt)}</span>
+    <span class="text-gray-700">${formatDate(investment.expiresAt)}</span>
     <span class="px-2 py-1 text-xs rounded-full ${
       investment.status === "active"
         ? "bg-green-100 text-green-700"
@@ -539,10 +539,8 @@ function createInvestmentCard(investment) {
   const details = document.createElement("div");
   details.className = "hidden px-6 pb-4 text-sm text-gray-600 bg-gray-50";
   details.innerHTML = `
-    <p><strong>User Email:</strong> ${investment.user?.email || "N/A"}</p>
-    <p><strong>Daily Income:</strong> ₦${investment.dailyIncome || 0}</p>
-    <p><strong>Total Income:</strong> ₦${investment.totalIncome || 0}</p>
-    <p><strong>Plan Status:</strong> ${investment.plan?.status || "N/A"}</p>
+    <p><strong>User Email:</strong> ${investment.user?.phoneNumber || "N/A"}</p>
+    <p><strong>Plan Status:</strong> ${investment.status || "N/A"}</p>
     <p><strong>Investment ID:</strong> ${investment._id}</p>
   `;
 
