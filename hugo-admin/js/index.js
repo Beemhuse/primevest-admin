@@ -19,6 +19,10 @@ const totalDeposits = document.getElementById("totalDeposits");
 const totalWithdrawals = document.getElementById("totalWithdrawals");
 const loader = document.getElementById("loader");
 const usersContainer = document.getElementById("usersContainer");
+const totalPlatformEarnings = document.getElementById("totalPlatformEarnings");
+const totalDepositAmount = document.getElementById("totalDepositAmount");
+const totalWithdrawalAmount = document.getElementById("totalWithdrawalAmount");
+const totalInvestmentAmount = document.getElementById("totalInvestmentAmount");
 
 // get admin dashboard analytics
 async function loadAdminStats() {
@@ -33,15 +37,19 @@ async function loadAdminStats() {
       }
     );
 
-    const data = await response.json();
+    const data = await response.json( );
 
     if (response.ok && data.success) {
       const adminAnal = data.data;
-
+      console.log(adminAnal)
       totalUsers.textContent = adminAnal.totalUsers || 0;
       totalDeposits.textContent = adminAnal.totalDeposits || 0;
       totalInvestments.textContent = adminAnal.totalInvestments || 0;
       totalWithdrawals.textContent = adminAnal.totalWithdrawals || 0;
+      totalPlatformEarnings.textContent = adminAnal.totalPlatformEarnings || 0;
+      totalDepositAmount.textContent = "₦" + (adminAnal.totalDepositAmount || 0).toLocaleString();
+      totalInvestmentAmount.textContent = "₦" + (adminAnal.totalInvestmentAmount || 0).toLocaleString();
+      totalWithdrawalAmount.textContent = "₦" + (adminAnal.totalWithdrawalAmount || 0).toLocaleString();
     } else {
       console.error("Failed to fetch dashboard stats:", data.message);
       alert("Unable to load dashboard stats. Please try again.");
@@ -212,30 +220,70 @@ editUserForm.addEventListener("submit", async (e) => {
   };
 
   try {
-    const res = await fetch(
-      `https://prime-invest-server.onrender.com/api/admin/users/${currentUserId}`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(body),
-      }
-    );
+  console.log("Updating user:", currentUserId, body);
+  if (!currentUserId) throw new Error("Missing user ID.");
+  if (!Object.keys(body).length) throw new Error("No data to update.");
 
-    const data = await res.json();
-    if (!res.ok || !data.success)
-      throw new Error(data.message || "Failed to update user");
+  const res = await fetch(
+    `https://prime-invest-server.onrender.com/api/admin/users/${currentUserId}`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(body),
+    }
+  );
 
-    alert("✅ User updated successfully!");
-    saveBtn.textContent = "Save";
-    editUserModal.classList.remove("scale-100");
-    editUserModal.classList.add("scale-0");
-    saveBtn.disabled = false;
-    loadAllUsers();
-  } catch (err) {
-    console.error(err);
-    alert("❌ Failed to update user.");
+  let data = {};
+  try {
+    data = await res.json();
+  } catch {
+    console.warn("Response is not JSON");
   }
+
+  if (!res.ok || !data.success) {
+    throw new Error(data.message || `HTTP ${res.status}: Failed to update user`);
+  }
+
+  alert("✅ User updated successfully!");
+  saveBtn.textContent = "Save";
+  saveBtn.disabled = false;
+  editUserModal.classList.remove("scale-100");
+  editUserModal.classList.add("scale-0"); 
+  loadAllUsers();
+} catch (err) {
+  console.error("Update user error:", err);
+  alert(`❌ ${err.message || "Failed to update user."}`);
+  saveBtn.textContent = "Save";
+  saveBtn.disabled = false;
+}
+
+  // try {
+  //   const res = await fetch(
+  //     `https://prime-invest-server.onrender.com/api/admin/users/${currentUserId}`,
+  //     {
+  //       method: "PATCH",
+  //       headers: { "Content-Type": "application/json" },
+  //       credentials: "include",
+  //       body: JSON.stringify(body),
+  //     }
+  //   );
+
+  //   const data = await res.json();
+  //   if (!res.ok || !data.success)
+  //     throw new Error(data.message || "Failed to update user");
+
+  //   alert("✅ User updated successfully!");
+  //   saveBtn.textContent = "Save";
+  //   editUserModal.classList.remove("scale-100");
+  //   editUserModal.classList.add("scale-0");
+  //   saveBtn.disabled = false;
+  //   loadAllUsers();
+  // } catch (err) {
+  //   console.error(err);
+  //   alert("❌ Failed to update user.");
+  //   saveBtn.disabled = false;
+  // }
 });
 
 window.addEventListener("DOMContentLoaded", loadAllUsers);
@@ -455,168 +503,252 @@ fetchPlans();
 // financial services
 
 const API_BASE_URL = "https://prime-invest-server.onrender.com/api";
-const investmentContainer = document.getElementById("investmentContainer");
-const editModal = document.getElementById("editModalInv");
-const statusSelect = document.getElementById("statusSelectInv");
-const cancelEditBtn = document.getElementById("cancelEditInv");
-const saveEditBtn = document.getElementById("saveEditInv");
+const investmentContainer = document.getElementById("investmentContainer");//.
 
-let currentEditingId = null;
+// === FETCH & DISPLAY ALL INVESTMENTS ===
 async function getAllInvestments() {
+  investmentContainer.innerHTML = `
+    <p class="text-gray-500 text-center py-6">Loading investments...</p>
+  `;
+
   try {
     const response = await fetch(`${API_BASE_URL}/admin/investments`, {
       method: "GET",
-      headers: { "content-type": "application/json" },
+      headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
+
     const data = await response.json();
 
-    if (data.success && Array.isArray(data.data)) {
-      if (data.data.length === 0) {
-        investmentContainer.innerHTML = `
+    if (!data.success || !Array.isArray(data.data)) {
+      investmentContainer.innerHTML = `
+        <p class="text-gray-500 text-center py-6">No investments found.</p>
+      `;
+      return;
+    }
+
+    // If no data
+    if (data.data.length === 0) {
+      investmentContainer.innerHTML = `
         <p class="text-gray-500 text-center py-6">No investments yet.</p>
       `;
-        return;
-      }
-      investmentContainer.innerHTML = "";
-      data.data.forEach((investment) => {
-        const card = createInvestmentCard(investment);
-        investmentContainer.appendChild(card);
-      });
-    } else {
-      investmentContainer.innerHTML = `<p class="text-gray-500 text-center py-4">No investments found.</p>`;
+      return;
     }
+
+    // Clear container
+    investmentContainer.innerHTML = "";
+
+    // Render each investment
+    data.data.forEach((inv) => {
+      const card = document.createElement("div");
+      card.className =
+        "w-full flex flex-col border-b hover:bg-gray-50 transition-all duration-300 p-4";
+
+      card.innerHTML = `
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <span class="font-semibold text-gray-700">${inv.plan || "N/A"}</span>
+          <span class="text-gray-600">${inv.user?.username || "Unknown User"}</span>
+          <span class="text-gray-600">₦${inv.amount || 0}</span>
+          <span class="text-gray-600">Profit: ₦${inv.profitEarned || 0}</span>
+          <span class="text-gray-600">${formatDate(inv.createdAt)}</span>
+          <span class="text-gray-600">${formatDate(inv.expiresAt)}</span>
+          <span class="px-2 py-1 text-xs rounded-full ${
+            inv.status === "active"
+              ? "bg-green-100 text-green-700"
+              : "bg-gray-200 text-gray-700"
+          }">${inv.status}</span>
+        </div>
+        <div class="mt-2 text-sm text-gray-500">
+          <p><strong>User Phone:</strong> ${inv.user?.phoneNumber || "N/A"}</p>
+          <p><strong>Investment ID:</strong> ${inv._id}</p>
+          <p><strong>User ID:</strong> ${inv.user?._id || "N/A"}</p>
+        </div>
+      `;
+
+      investmentContainer.appendChild(card);
+    });
   } catch (error) {
     console.error("Error fetching investments:", error);
-    investmentContainer.innerHTML = `<p class="text-red-500 text-center py-4">Failed to load investments.</p>`;
+    investmentContainer.innerHTML = `
+      <p class="text-red-500 text-center py-6">Failed to load investments. Please try again.</p>
+    `;
   }
 }
 
-// === CREATE INVESTMENT CARD ===
-function createInvestmentCard(investment) {
-  const card = document.createElement("div");
-  card.className =
-    "w-full flex flex-col border-b hover:bg-gray-50 transition-all duration-300";
-
-  const summary = document.createElement("div");
-  summary.className =
-    "w-full flex p-4 items-center justify-between cursor-pointer";
-
-  summary.innerHTML = `
-    <span class="text-gray-700 font-medium">${
-      investment.plan || "N/A"
-    }</span>
-    <span class="text-gray-700">${investment.user?.username}</span>
-    <span class="text-gray-700">${
-      investment.profitEarned || 0
-    } days</span>
-    <span class="text-gray-700">₦${investment.amount || 0}</span>
-    <span class="text-gray-700">${formatDate(investment.createdAt)}</span>
-    <span class="text-gray-700">${formatDate(investment.expiresAt)}</span>
-    <span class="px-2 py-1 text-xs rounded-full ${
-      investment.status === "active"
-        ? "bg-green-100 text-green-700"
-        : "bg-gray-200 text-gray-700"
-    }">${investment.status}</span>
-
-    <!-- Actions -->
-    <span class="relative flex items-center justify-center w-8 h-8 border rounded-full cursor-pointer group hover:bg-gray-100">
-      <i class="fas fa-ellipsis-v text-gray-600"></i>
-      <div class="absolute top-8 right-0 z-10 w-32 bg-white shadow-lg rounded-md scale-0 group-hover:scale-100 transition-all duration-200 origin-top-right p-2">
-        <div class="flex items-center gap-2 px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-blue-100 hover:text-blue-600 editBtn-investments">
-          <i class="fas fa-edit text-[12px]"></i>
-          <span class="text-[12px] font-medium">Edit</span>
-        </div>
-        <div class="flex items-center gap-2 px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-green-100 hover:text-green-600 expandBtn">
-          <i class="fas fa-compress"></i>
-          <span class="text-[12px] font-medium">Expand</span>
-        </div>
-      </div>
-    </span>
-  `;
-
-  // Expanded details section
-  const details = document.createElement("div");
-  details.className = "hidden px-6 pb-4 text-sm text-gray-600 bg-gray-50";
-  details.innerHTML = `
-    <p><strong>User Email:</strong> ${investment.user?.phoneNumber || "N/A"}</p>
-    <p><strong>Plan Status:</strong> ${investment.status || "N/A"}</p>
-    <p><strong>Investment ID:</strong> ${investment._id}</p>
-  `;
-
-  // Expand toggle
-  summary
-    .querySelector(".expandBtn")
-    .addEventListener("click", () => details.classList.toggle("hidden"));
-
-  // Edit toggle
-  summary
-    .querySelector(".editBtn-investments")
-    .addEventListener("click", () => {
-      currentEditingId = investment._id;
-      statusSelect.value = investment.status;
-      editModal.classList.remove("hidden");
-      editModal.classList.add("flex");
-    });
-
-  card.appendChild(summary);
-  card.appendChild(details);
-
-  return card;
-}
-
-// === PATCH: UPDATE INVESTMENT STATUS ===
-async function updateInvestmentStatus(id, status) {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/admin/investments/${id}/status`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status }),
-      }
-    );
-
-    const result = await response.json();
-
-    if (result.success) {
-      alert("Investment status updated successfully.");
-      getAllInvestments();
-    } else {
-      alert("Failed to update investment status.");
-    }
-  } catch (error) {
-    console.error("Error updating investment:", error);
-    alert("An error occurred while updating the investment.");
-  }
-}
-
-// === HELPERS ===
+// === HELPER: FORMAT DATE ===
 function formatDate(dateStr) {
   if (!dateStr) return "N/A";
   const date = new Date(dateStr);
   return date.toISOString().split("T")[0];
 }
 
-// === MODAL CONTROLS ===
-cancelEditBtn.addEventListener("click", () => {
-  editModal.classList.add("hidden");
-  editModal.classList.remove("flex");
-});
-
-saveEditBtn.addEventListener("click", () => {
-  const newStatus = statusSelect.value;
-  if (currentEditingId) {
-    updateInvestmentStatus(currentEditingId, newStatus);
-    editModal.classList.add("hidden");
-    editModal.classList.remove("flex");
-  }
-});
-
 // === INITIAL CALL ===
 getAllInvestments();
+
+
+// const API_BASE_URL = "https://prime-invest-server.onrender.com/api";
+// const investmentContainer = document.getElementById("investmentContainer");
+// const editModal = document.getElementById("editModalInv");
+// const statusSelect = document.getElementById("statusSelectInv");
+// const cancelEditBtn = document.getElementById("cancelEditInv");
+// const saveEditBtn = document.getElementById("saveEditInv");
+
+// let currentEditingId = null;
+// async function getAllInvestments() {
+//   try {
+//     const response = await fetch(`${API_BASE_URL}/admin/investments`, {
+//       method: "GET",
+//       headers: { "content-type": "application/json" },
+//       credentials: "include",
+//     });
+//     const data = await response.json();
+
+//     if (data.success && Array.isArray(data.data)) {
+//       if (data.data.length === 0) {
+//         investmentContainer.innerHTML = `
+//         <p class="text-gray-500 text-center py-6">No investments yet.</p>
+//       `;
+//         return;
+//       }
+//       investmentContainer.innerHTML = "";
+//       data.data.forEach((investment) => {
+//         const card = createInvestmentCard(investment);
+//         investmentContainer.appendChild(card);
+//       });
+//     } else {
+//       investmentContainer.innerHTML = `<p class="text-gray-500 text-center py-4">No investments found.</p>`;
+//     }
+//   } catch (error) {
+//     console.error("Error fetching investments:", error);
+//     investmentContainer.innerHTML = `<p class="text-red-500 text-center py-4">Failed to load investments.</p>`;
+//   }
+// }
+
+// // === CREATE INVESTMENT CARD ===
+// function createInvestmentCard(investment) {
+//   const card = document.createElement("div");
+//   card.className =
+//     "w-full flex flex-col border-b hover:bg-gray-50 transition-all duration-300";
+
+//   const summary = document.createElement("div");
+//   summary.className =
+//     "w-full flex p-4 items-center justify-between cursor-pointer";
+
+//   summary.innerHTML = `
+//     <span class="text-gray-700 font-medium">${
+//       investment.plan || "N/A"
+//     }</span>
+//     <span class="text-gray-700">${investment.user?.username}</span>
+//     <span class="text-gray-700">${
+//       investment.profitEarned || 0
+//     } days</span>
+//     <span class="text-gray-700">₦${investment.amount || 0}</span>
+//     <span class="text-gray-700">${formatDate(investment.createdAt)}</span>
+//     <span class="text-gray-700">${formatDate(investment.expiresAt)}</span>
+//     <span class="px-2 py-1 text-xs rounded-full ${
+//       investment.status === "active"
+//         ? "bg-green-100 text-green-700"
+//         : "bg-gray-200 text-gray-700"
+//     }">${investment.status}</span>
+
+//     <!-- Actions -->
+//     <span class="relative flex items-center justify-center w-8 h-8 border rounded-full cursor-pointer group hover:bg-gray-100">
+//       <i class="fas fa-ellipsis-v text-gray-600"></i>
+//       <div class="absolute top-8 right-0 z-10 w-32 bg-white shadow-lg rounded-md scale-0 group-hover:scale-100 transition-all duration-200 origin-top-right p-2">
+//         <div class="flex items-center gap-2 px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-blue-100 hover:text-blue-600 editBtn-investments">
+//           <i class="fas fa-edit text-[12px]"></i>
+//           <span class="text-[12px] font-medium">Edit</span>
+//         </div>
+//         <div class="flex items-center gap-2 px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-green-100 hover:text-green-600 expandBtn">
+//           <i class="fas fa-compress"></i>
+//           <span class="text-[12px] font-medium">Expand</span>
+//         </div>
+//       </div>
+//     </span>
+//   `;
+
+//   // Expanded details section
+//   const details = document.createElement("div");
+//   details.className = "hidden px-6 pb-4 text-sm text-gray-600 bg-gray-50";
+//   details.innerHTML = `
+//     <p><strong>User Email:</strong> ${investment.user?.phoneNumber || "N/A"}</p>
+//     <p><strong>Plan Status:</strong> ${investment.status || "N/A"}</p>
+//     <p><strong>Investment ID:</strong> ${investment._id}</p>
+//   `;
+
+//   // Expand toggle
+//   summary
+//     .querySelector(".expandBtn")
+//     .addEventListener("click", () => details.classList.toggle("hidden"));
+
+//   // Edit toggle
+//   summary
+//     .querySelector(".editBtn-investments")
+//     .addEventListener("click", () => {
+//       currentEditingId = investment._id;
+//       statusSelect.value = investment.status;
+//       editModal.classList.remove("hidden");
+//       editModal.classList.add("flex");
+//     });
+
+//   card.appendChild(summary);
+//   card.appendChild(details);
+
+//   return card;
+// }
+
+// // === PATCH: UPDATE INVESTMENT STATUS ===
+// async function updateInvestmentStatus(id, status) {
+//   try {
+//     const response = await fetch(
+//       `${API_BASE_URL}/admin/investments/${id}/status`,
+//       {
+//         method: "PATCH",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({ status }),
+//       }
+//     );
+
+//     const result = await response.json();
+
+//     if (result.success) {
+//       alert("Investment status updated successfully.");
+//       getAllInvestments();
+//     } else {
+//       alert("Failed to update investment status.");
+//     }
+//   } catch (error) {
+//     console.error("Error updating investment:", error);
+//     alert("An error occurred while updating the investment.");
+//   }
+// }
+
+// // === HELPERS ===
+// function formatDate(dateStr) {
+//   if (!dateStr) return "N/A";
+//   const date = new Date(dateStr);
+//   return date.toISOString().split("T")[0];
+// }
+
+// // === MODAL CONTROLS ===
+// cancelEditBtn.addEventListener("click", () => {
+//   editModal.classList.add("hidden");
+//   editModal.classList.remove("flex");
+// });
+
+// saveEditBtn.addEventListener("click", () => {
+//   const newStatus = statusSelect.value;
+//   if (currentEditingId) {
+//     updateInvestmentStatus(currentEditingId, newStatus);
+//     editModal.classList.add("hidden");
+//     editModal.classList.remove("flex");
+//   }
+// });
+
+// // === INITIAL CALL ===
+// getAllInvestments();
 
 // page loading
 pageBtns.forEach((btn) => {
@@ -1007,9 +1139,9 @@ settingsBtn.forEach((btn) => {
     return card;
   }
 
-  async function updateDepositStatus(id, status) {
+  async function updateDepositStatus(_id, status) {
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/deposits/${id}/status`, {
+      const res = await fetch(`${API_BASE_URL}/admin/deposits/${_id}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -1035,10 +1167,10 @@ settingsBtn.forEach((btn) => {
     }
   }
 
-  async function updateWithdrawalStatus(id, status) {
+  async function updateWithdrawalStatus(_id, status) {
     try {
       const res = await fetch(
-        `${API_BASE_URL}/admin/withdrawals/${id}/status`,
+        `${API_BASE_URL}/admin/withdrawals/${_id}/status`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -1066,14 +1198,15 @@ settingsBtn.forEach((btn) => {
     }
   }
 
-  function statusBadgeClass(status) {
-    const s = (status || "").toLowerCase();
-    if (["approved", "failed", "successful"].includes(s))
-      return "bg-green-100 text-green-700";
-    if (s === "pending") return "bg-yellow-100 text-yellow-800";
-    if (["failed", "completed"].includes(s)) return "bg-gray-200 text-gray-700";
-    return "bg-gray-100 text-gray-700";
-  }
+ function statusBadgeClass(status) {
+  const s = (status || "").toLowerCase();
+  if (s === "approved" || s === "successful")
+    return "bg-green-100 text-green-700";
+  if (s === "pending") return "bg-yellow-100 text-yellow-800";
+  if (s === "failed") return "bg-red-100 text-red-700";
+  return "bg-gray-100 text-gray-700";
+}
+
 
   function escapeText(input) {
     if (input === undefined || input === null) return "";
