@@ -711,10 +711,12 @@ settingsBtn.forEach((btn) => {
       statusSelect.innerHTML =
         type === "deposit"
           ? `
+          <option value="pending">pending</option>
           <option value="successful">successful</option>
           <option value="failed">failed</option>
         `
           : `
+           <option value="pending">pending</option>
           <option value="successful">successful</option>
           <option value="failed">failed</option>
         `;
