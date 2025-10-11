@@ -546,12 +546,12 @@ async function getAllInvestments() {
 
       card.innerHTML = `
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <span class="font-semibold text-gray-700">${inv.plan || "N/A"}</span>
+          <span class="font-semibold text-gray-700">${inv.plan?.title || "N/A"}</span>
           <span class="text-gray-600">${inv.user?.username || "Unknown User"}</span>
           <span class="text-gray-600">₦${inv.amount || 0}</span>
           <span class="text-gray-600">Profit: ₦${inv.profitEarned || 0}</span>
-          <span class="text-gray-600">${formatDate(inv.createdAt)}</span>
-          <span class="text-gray-600">${formatDate(inv.expiresAt)}</span>
+          <span class="text-gray-600">${formatDate(inv.startDate)}</span>
+          <span class="text-gray-600">${formatDate(inv.endDate)}</span>
           <span class="px-2 py-1 text-xs rounded-full ${
             inv.status === "active"
               ? "bg-green-100 text-green-700"
@@ -560,8 +560,8 @@ async function getAllInvestments() {
         </div>
         <div class="mt-2 text-sm text-gray-500">
           <p><strong>User Phone:</strong> ${inv.user?.phoneNumber || "N/A"}</p>
-          <p><strong>Investment ID:</strong> ${inv._id}</p>
-          <p><strong>User ID:</strong> ${inv.user?._id || "N/A"}</p>
+          <p class="hidden"><strong>Investment ID:</strong> ${inv._id}</p>
+          <p class="hidden"><strong>User ID:</strong> ${inv.user?._id || "N/A"}</p>
         </div>
       `;
 
