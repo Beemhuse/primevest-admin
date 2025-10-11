@@ -141,10 +141,10 @@ async function loadAllUsers() {
           user.phoneNumber
         }</span>
         <span class="text-gray-700 w-[14%] text-center truncate">${
-          user.welfareBalance || "N/A"
+          user.welfareRechargeBalance || "N/A"
         }</span>
         <span class="text-gray-700 w-[14%] text-center truncate">${
-          user.investmentBalance || "N/A"
+          user.investmentRechargeBalance || "N/A"
         }</span>
         <span class="text-gray-700 w-[14%] text-center truncate">${
           user.role || "N/A"
@@ -214,9 +214,8 @@ editUserForm.addEventListener("submit", async (e) => {
 
   const body = {
     accountStatus: accountStatusInput.value,
-    accountBalance: parseFloat(accountBalanceInput.value),
-    investmentBalance: parseFloat(investmentBalanceInput.value),
-    welfareBalance: parseFloat(welfareBalanceInput.value),
+    investmentRechargeBalance: parseFloat(investmentBalanceInput.value),
+    welfareRechargeBalance: parseFloat(welfareBalanceInput.value),
   };
 
   try {
@@ -585,170 +584,6 @@ function formatDate(dateStr) {
 // === INITIAL CALL ===
 getAllInvestments();
 
-
-// const API_BASE_URL = "https://prime-invest-server.onrender.com/api";
-// const investmentContainer = document.getElementById("investmentContainer");
-// const editModal = document.getElementById("editModalInv");
-// const statusSelect = document.getElementById("statusSelectInv");
-// const cancelEditBtn = document.getElementById("cancelEditInv");
-// const saveEditBtn = document.getElementById("saveEditInv");
-
-// let currentEditingId = null;
-// async function getAllInvestments() {
-//   try {
-//     const response = await fetch(`${API_BASE_URL}/admin/investments`, {
-//       method: "GET",
-//       headers: { "content-type": "application/json" },
-//       credentials: "include",
-//     });
-//     const data = await response.json();
-
-//     if (data.success && Array.isArray(data.data)) {
-//       if (data.data.length === 0) {
-//         investmentContainer.innerHTML = `
-//         <p class="text-gray-500 text-center py-6">No investments yet.</p>
-//       `;
-//         return;
-//       }
-//       investmentContainer.innerHTML = "";
-//       data.data.forEach((investment) => {
-//         const card = createInvestmentCard(investment);
-//         investmentContainer.appendChild(card);
-//       });
-//     } else {
-//       investmentContainer.innerHTML = `<p class="text-gray-500 text-center py-4">No investments found.</p>`;
-//     }
-//   } catch (error) {
-//     console.error("Error fetching investments:", error);
-//     investmentContainer.innerHTML = `<p class="text-red-500 text-center py-4">Failed to load investments.</p>`;
-//   }
-// }
-
-// // === CREATE INVESTMENT CARD ===
-// function createInvestmentCard(investment) {
-//   const card = document.createElement("div");
-//   card.className =
-//     "w-full flex flex-col border-b hover:bg-gray-50 transition-all duration-300";
-
-//   const summary = document.createElement("div");
-//   summary.className =
-//     "w-full flex p-4 items-center justify-between cursor-pointer";
-
-//   summary.innerHTML = `
-//     <span class="text-gray-700 font-medium">${
-//       investment.plan || "N/A"
-//     }</span>
-//     <span class="text-gray-700">${investment.user?.username}</span>
-//     <span class="text-gray-700">${
-//       investment.profitEarned || 0
-//     } days</span>
-//     <span class="text-gray-700">₦${investment.amount || 0}</span>
-//     <span class="text-gray-700">${formatDate(investment.createdAt)}</span>
-//     <span class="text-gray-700">${formatDate(investment.expiresAt)}</span>
-//     <span class="px-2 py-1 text-xs rounded-full ${
-//       investment.status === "active"
-//         ? "bg-green-100 text-green-700"
-//         : "bg-gray-200 text-gray-700"
-//     }">${investment.status}</span>
-
-//     <!-- Actions -->
-//     <span class="relative flex items-center justify-center w-8 h-8 border rounded-full cursor-pointer group hover:bg-gray-100">
-//       <i class="fas fa-ellipsis-v text-gray-600"></i>
-//       <div class="absolute top-8 right-0 z-10 w-32 bg-white shadow-lg rounded-md scale-0 group-hover:scale-100 transition-all duration-200 origin-top-right p-2">
-//         <div class="flex items-center gap-2 px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-blue-100 hover:text-blue-600 editBtn-investments">
-//           <i class="fas fa-edit text-[12px]"></i>
-//           <span class="text-[12px] font-medium">Edit</span>
-//         </div>
-//         <div class="flex items-center gap-2 px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-green-100 hover:text-green-600 expandBtn">
-//           <i class="fas fa-compress"></i>
-//           <span class="text-[12px] font-medium">Expand</span>
-//         </div>
-//       </div>
-//     </span>
-//   `;
-
-//   // Expanded details section
-//   const details = document.createElement("div");
-//   details.className = "hidden px-6 pb-4 text-sm text-gray-600 bg-gray-50";
-//   details.innerHTML = `
-//     <p><strong>User Email:</strong> ${investment.user?.phoneNumber || "N/A"}</p>
-//     <p><strong>Plan Status:</strong> ${investment.status || "N/A"}</p>
-//     <p><strong>Investment ID:</strong> ${investment._id}</p>
-//   `;
-
-//   // Expand toggle
-//   summary
-//     .querySelector(".expandBtn")
-//     .addEventListener("click", () => details.classList.toggle("hidden"));
-
-//   // Edit toggle
-//   summary
-//     .querySelector(".editBtn-investments")
-//     .addEventListener("click", () => {
-//       currentEditingId = investment._id;
-//       statusSelect.value = investment.status;
-//       editModal.classList.remove("hidden");
-//       editModal.classList.add("flex");
-//     });
-
-//   card.appendChild(summary);
-//   card.appendChild(details);
-
-//   return card;
-// }
-
-// // === PATCH: UPDATE INVESTMENT STATUS ===
-// async function updateInvestmentStatus(id, status) {
-//   try {
-//     const response = await fetch(
-//       `${API_BASE_URL}/admin/investments/${id}/status`,
-//       {
-//         method: "PATCH",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({ status }),
-//       }
-//     );
-
-//     const result = await response.json();
-
-//     if (result.success) {
-//       alert("Investment status updated successfully.");
-//       getAllInvestments();
-//     } else {
-//       alert("Failed to update investment status.");
-//     }
-//   } catch (error) {
-//     console.error("Error updating investment:", error);
-//     alert("An error occurred while updating the investment.");
-//   }
-// }
-
-// // === HELPERS ===
-// function formatDate(dateStr) {
-//   if (!dateStr) return "N/A";
-//   const date = new Date(dateStr);
-//   return date.toISOString().split("T")[0];
-// }
-
-// // === MODAL CONTROLS ===
-// cancelEditBtn.addEventListener("click", () => {
-//   editModal.classList.add("hidden");
-//   editModal.classList.remove("flex");
-// });
-
-// saveEditBtn.addEventListener("click", () => {
-//   const newStatus = statusSelect.value;
-//   if (currentEditingId) {
-//     updateInvestmentStatus(currentEditingId, newStatus);
-//     editModal.classList.add("hidden");
-//     editModal.classList.remove("flex");
-//   }
-// });
-
-// // === INITIAL CALL ===
-// getAllInvestments();
 
 // page loading
 pageBtns.forEach((btn) => {
