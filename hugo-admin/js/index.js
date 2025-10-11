@@ -40,8 +40,9 @@ async function loadAdminStats() {
     const data = await response.json( );
 
     if (response.ok && data.success) {
+
       const adminAnal = data.data;
-      console.log(adminAnal)
+      document.querySelectorAll(".shimmer").forEach(el => el.classList.remove("shimmer"));
       totalUsers.textContent = adminAnal.totalUsers || 0;
       totalDeposits.textContent = adminAnal.totalDeposits || 0;
       totalInvestments.textContent = adminAnal.totalInvestments || 0;
@@ -256,33 +257,6 @@ editUserForm.addEventListener("submit", async (e) => {
   saveBtn.textContent = "Save";
   saveBtn.disabled = false;
 }
-
-  // try {
-  //   const res = await fetch(
-  //     `https://prime-invest-server.onrender.com/api/admin/users/${currentUserId}`,
-  //     {
-  //       method: "PATCH",
-  //       headers: { "Content-Type": "application/json" },
-  //       credentials: "include",
-  //       body: JSON.stringify(body),
-  //     }
-  //   );
-
-  //   const data = await res.json();
-  //   if (!res.ok || !data.success)
-  //     throw new Error(data.message || "Failed to update user");
-
-  //   alert("✅ User updated successfully!");
-  //   saveBtn.textContent = "Save";
-  //   editUserModal.classList.remove("scale-100");
-  //   editUserModal.classList.add("scale-0");
-  //   saveBtn.disabled = false;
-  //   loadAllUsers();
-  // } catch (err) {
-  //   console.error(err);
-  //   alert("❌ Failed to update user.");
-  //   saveBtn.disabled = false;
-  // }
 });
 
 window.addEventListener("DOMContentLoaded", loadAllUsers);
@@ -938,9 +912,9 @@ settingsBtn.forEach((btn) => {
       <p><strong>Account status:</strong> ${escapeText(
         w.user?.accountStatus || "—"
       )}</p>
-      <p><strong>Request ID:</strong> ${escapeText(w._id)}</p>
+      <p><strong>Net amount:</strong> ${w.netAmount || 0.00}</p>
+      <p><strong>Platform fee:</strong> ${w.platformFee || 0.00}</p>
     `;
-
     card.appendChild(row);
     card.appendChild(details);
 
