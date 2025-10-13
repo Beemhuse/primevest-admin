@@ -142,13 +142,10 @@ async function loadAllUsers() {
           user.phoneNumber
         }</span>
         <span class="text-gray-700 w-[14%] text-center truncate">${
-          user.welfareRechargeBalance || "N/A"
+          user.welfareRechargeBalance || 0.00
         }</span>
         <span class="text-gray-700 w-[14%] text-center truncate">${
-          user.investmentRechargeBalance || "N/A"
-        }</span>
-        <span class="text-gray-700 w-[14%] text-center truncate">${
-          user.role || "N/A"
+          user.investmentRechargeBalance || 0.00
         }</span>
         <span class="text-gray-700 w-[14%] text-center truncate">
           <p class="text-green-700 font-semibold w-max ${
