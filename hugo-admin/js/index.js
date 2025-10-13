@@ -128,48 +128,109 @@ async function loadAllUsers() {
       usersContainer.innerHTML = `<div class="text-center py-8 text-gray-500 font-semibold">No users found</div>`;
       return;
     }
-
+    // console.log(users)
     users.forEach((user) => {
-      const userRow = document.createElement("div");
-      userRow.className =
-        "w-full px-4 py-2 border-b flex items-center justify-between hover:bg-gray-50 transition-all text-sm";
+  const userRow = document.createElement("div");
+  userRow.className =
+    "w-full px-4 py-2 border-b flex flex-col hover:bg-gray-50 transition-all text-sm";
 
-      userRow.innerHTML = `
-        <span class="text-gray-700 w-[14%] text-center truncate">${
-          user.username
-        }</span>
-        <span class="text-gray-700 w-[14%] text-center truncate">${
-          user.phoneNumber
-        }</span>
-        <span class="text-gray-700 w-[14%] text-center truncate">${
-          user.welfareRechargeBalance || 0.00
-        }</span>
-        <span class="text-gray-700 w-[14%] text-center truncate">${
-          user.investmentRechargeBalance || 0.00
-        }</span>
+  // main visible row
+  userRow.innerHTML = `
+    <div class="flex items-center justify-between">
+      <span class="text-gray-700 w-[14%] text-center truncate">${user.username}</span>
+      <span class="text-gray-700 w-[14%] text-center truncate">${user.phoneNumber}</span>
+      <span class="text-gray-700 w-[14%] text-center truncate">${user.welfareRechargeBalance || 0.0}</span>
+      <span class="text-gray-700 w-[14%] text-center truncate">${user.investmentRechargeBalance || 0.0}</span>
+      <span class="text-gray-700 w-[14%] text-center truncate">
+        <p class="font-semibold w-max ${
+          user.accountStatus === "active"
+            ? "bg-green-100 text-green-700"
+            : "bg-red-100 text-red-700"
+        } px-2 py-1 rounded-full capitalize">${user.accountStatus}</p>
+      </span>
+      <span class="text-gray-500 w-[14%] relative flex items-center justify-center gap-3">
+        <span class="flex items-center gap-2 border p-1 px-2 hover:text-blue-500 cursor-pointer hover:bg-blue-100 rounded-md transition-all editUserBtn" data-id="${user._id}">
+          <i class="fas fa-edit text-[10px]"></i>
+          <span class="text-[10px] font-semibold">Edit</span>
+        </span>
+        <button class="expandUserBtn border px-2 py-1 text-[10px] rounded-md hover:bg-gray-100 transition">
+          <i class="fas fa-chevron-down"></i>
+        </button>
+      </span>
+    </div>
+
+    <!-- expandable section -->
+    <div class="user-extra hidden mt-2 p-3 bg-gray-50 rounded-lg grid grid-cols-3 gap-4 text-xs">
+      <div><span class="font-semibold text-gray-600">Bank Name:</span> <span>${user.bankName || "none"}</span></div>
+      <div><span class="font-semibold text-gray-600">Account Number:</span> <span>${user.accountNumber || "none"}</span></div>
+      <div><span class="font-semibold text-gray-600">Account Name:</span> <span>${user.accountName || "none"}</span></div>
+    </div>
+  `;
+
+  usersContainer.appendChild(userRow);
+});
+
+// search input
+// keep a copy of all users
+let allUsers = [];
+
+allUsers = users;
+
+// search input functionality
+const searchInput = document.getElementById("userSearch");
+
+searchInput.addEventListener("input", (e) => {
+  const query = e.target.value.toLowerCase();
+
+  // clear the container
+  usersContainer.innerHTML = "";
+
+  // filter by username
+  const filteredUsers = allUsers.filter((user) =>
+    user.username.toLowerCase().includes(query)
+  );
+
+  // re-render filtered users
+  filteredUsers.forEach((user) => {
+    const userRow = document.createElement("div");
+    userRow.className =
+      "w-full px-4 py-2 border-b flex flex-col hover:bg-gray-50 transition-all text-sm";
+
+    userRow.innerHTML = `
+      <div class="flex items-center justify-between">
+        <span class="text-gray-700 w-[14%] text-center truncate">${user.username}</span>
+        <span class="text-gray-700 w-[14%] text-center truncate">${user.phoneNumber}</span>
+        <span class="text-gray-700 w-[14%] text-center truncate">${user.welfareRechargeBalance || 0.0}</span>
+        <span class="text-gray-700 w-[14%] text-center truncate">${user.investmentRechargeBalance || 0.0}</span>
         <span class="text-gray-700 w-[14%] text-center truncate">
-          <p class="text-green-700 font-semibold w-max ${
+          <p class="font-semibold w-max ${
             user.accountStatus === "active"
-              ? "bg-green-100"
+              ? "bg-green-100 text-green-700"
               : "bg-red-100 text-red-700"
           } px-2 py-1 rounded-full capitalize">${user.accountStatus}</p>
         </span>
-        <span class="text-gray-500 w-[14%] relative flex items-center justify-center group cursor-pointer dropdown">
-  <i class="fas fa-ellipsis-v"></i>
-  <span class="absolute z-10 flex flex-col top-4 -right-9 bg-white shadow-lg rounded-md opacity-0 pointer-events-none group-hover:opacity-100 p-2 gap-2 transition-all duration-200 dropdown-menu">
-    <span class="flex items-center gap-2 border-b p-2 hover:text-blue-500 cursor-pointer group hover:bg-blue-100 rounded-md transition-all editUserBtn" data-id="${
-      user._id
-    }">
-      <i class="fas fa-edit text-[10px]"></i>
-      <span class="text-[10px] font-semibold">Edit</span>
-    </span>
-  </span>
-</span>
+        <span class="text-gray-500 w-[14%] relative flex items-center justify-center gap-3">
+          <span class="flex items-center gap-2 border p-1 px-2 hover:text-blue-500 cursor-pointer hover:bg-blue-100 rounded-md transition-all editUserBtn" data-id="${user._id}">
+            <i class="fas fa-edit text-[10px]"></i>
+            <span class="text-[10px] font-semibold">Edit</span>
+          </span>
+          <button class="expandUserBtn border px-2 py-1 text-[10px] rounded-md hover:bg-gray-100 transition">
+            <i class="fas fa-chevron-down"></i>
+          </button>
+        </span>
+      </div>
 
-      `;
+      <div class="user-extra hidden mt-2 p-3 bg-gray-50 rounded-lg grid grid-cols-3 gap-4 text-xs">
+        <div><span class="font-semibold text-gray-600">Bank Name:</span> <span>${user.bankName || "N/A"}</span></div>
+        <div><span class="font-semibold text-gray-600">Account Number:</span> <span>${user.accountNumber || "N/A"}</span></div>
+        <div><span class="font-semibold text-gray-600">Account Name:</span> <span>${user.accountName || "N/A"}</span></div>
+      </div>
+    `;
+    usersContainer.appendChild(userRow);
+  });
+});
 
-      usersContainer.appendChild(userRow);
-    });
+
   } catch (error) {
     console.error("Error fetching users:", error);
     usersContainer.innerHTML = `<div class="text-center py-8 text-red-500 font-semibold">Failed to load users.</div>`;
@@ -177,45 +238,24 @@ async function loadAllUsers() {
     loader.classList.add("hidden");
   }
 }
-
-// 🟦 Open Modal with User Data
-// usersContainer.addEventListener("click", async (e) => {
-//   try {
-//     const res = await fetch(
-//       `https://prime-invest-server.onrender.com/api/admin/users/${currentUserId}`,
-//       {
-//         method: "GET",
-//         headers: { "content-type": "application/json" },
-//         credentials: "include",
-//         cache: "no-store",
-//       }
-//     );const data = await res.json()
-//    if(data.success){
-//     const userDetails = data.data;
-//     userDetails.investmentRechargeBalance = userInvestment;
-//     userDetails.welfareRechargeBalance = userWelfare;
-//    }
-//   }catch{
-
-//   }
-//   const editBtn = e.target.closest(".editUserBtn");
-//   if (editBtn) {
-//     currentUserId = editBtn.dataset.id;
-
-//     const userRow = editBtn.closest("div").parentElement;
-//     const statusText = userRow.querySelector("p").textContent.trim();
-
-//     accountStatusInput.value = statusText.toLowerCase();
-//     investmentBalanceInput.value = userInvestment;
-//     welfareBalanceInput.value = userWelfare;
-
-//     editUserModal.classList.remove("scale-0");
-//     editUserModal.classList.add("scale-100");
-//   }
-// });
   usersContainer.addEventListener("click", async (e) => {
   
 e.preventDefault();
+const expandBtn = e.target.closest(".expandUserBtn");
+  if (expandBtn) {
+    const userRow = expandBtn.closest("div").parentElement;
+    const extraSection = userRow.querySelector(".user-extra");
+
+    // toggle visibility
+    extraSection.classList.toggle("hidden");
+
+    // toggle arrow direction
+    const icon = expandBtn.querySelector("i");
+    icon.classList.toggle("fa-chevron-down");
+    icon.classList.toggle("fa-chevron-up");
+  }
+
+
   const editBtn = e.target.closest(".editUserBtn");
   if (editBtn) {
     currentUserId = editBtn.dataset.id;
