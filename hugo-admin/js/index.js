@@ -182,23 +182,79 @@ async function loadAllUsers() {
 }
 
 // 🟦 Open Modal with User Data
-usersContainer.addEventListener("click", (e) => {
+// usersContainer.addEventListener("click", async (e) => {
+//   try {
+//     const res = await fetch(
+//       `https://prime-invest-server.onrender.com/api/admin/users/${currentUserId}`,
+//       {
+//         method: "GET",
+//         headers: { "content-type": "application/json" },
+//         credentials: "include",
+//         cache: "no-store",
+//       }
+//     );const data = await res.json()
+//    if(data.success){
+//     const userDetails = data.data;
+//     userDetails.investmentRechargeBalance = userInvestment;
+//     userDetails.welfareRechargeBalance = userWelfare;
+//    }
+//   }catch{
+
+//   }
+//   const editBtn = e.target.closest(".editUserBtn");
+//   if (editBtn) {
+//     currentUserId = editBtn.dataset.id;
+
+//     const userRow = editBtn.closest("div").parentElement;
+//     const statusText = userRow.querySelector("p").textContent.trim();
+
+//     accountStatusInput.value = statusText.toLowerCase();
+//     investmentBalanceInput.value = userInvestment;
+//     welfareBalanceInput.value = userWelfare;
+
+//     editUserModal.classList.remove("scale-0");
+//     editUserModal.classList.add("scale-100");
+//   }
+// });
+  usersContainer.addEventListener("click", async (e) => {
+  
+e.preventDefault();
   const editBtn = e.target.closest(".editUserBtn");
   if (editBtn) {
     currentUserId = editBtn.dataset.id;
+try {
+    const res = await fetch(
+      `https://prime-invest-server.onrender.com/api/admin/users/${currentUserId}`,
+      {
+        method: "GET",
+        headers: { "content-type": "application/json" },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
 
+    const data = await res.json();
+    if (data.success) {
+      const userDetails = data.data;
+      userDetails.investmentRechargeBalance = userInvestment;
+      userDetails.welfareRechargeBalance = userWelfare;
+        accountStatusInput.value = statusText.toLowerCase();
+    investmentBalanceInput.value = userInvestment;
+    welfareBalanceInput.value = userWelfare;
+    }
+  } catch (err) {
+    console.error("Error fetching user:", err);
+  }
     const userRow = editBtn.closest("div").parentElement;
     const statusText = userRow.querySelector("p").textContent.trim();
 
-    accountStatusInput.value = statusText.toLowerCase();
-    accountBalanceInput.value = "";
-    investmentBalanceInput.value = "";
-    welfareBalanceInput.value = "";
+  
 
     editUserModal.classList.remove("scale-0");
     editUserModal.classList.add("scale-100");
   }
 });
+
 
 // 🟥 Close Modal
 cancelEdit.addEventListener("click", () => {
