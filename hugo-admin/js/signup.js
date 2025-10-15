@@ -33,7 +33,7 @@ document
 
     try {
       const response = await fetch(
-        "https://admin.primeevest.com/api/admin/auth/signup",
+        "https://api.primeevest.com/api/admin/auth/signup",
         {
           method: "POST",
           headers: {
