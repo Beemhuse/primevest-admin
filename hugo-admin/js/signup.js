@@ -33,7 +33,7 @@ document
 
     try {
       const response = await fetch(
-        "https://prime-invest-server.onrender.com/api/admin/auth/signup",
+        "https://admin.primeevest.com/api/admin/auth/signup",
         {
           method: "POST",
           headers: {
