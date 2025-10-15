@@ -28,7 +28,7 @@ const totalInvestmentAmount = document.getElementById("totalInvestmentAmount");
 async function loadAdminStats() {
   try {
     const response = await fetch(
-      "https://prime-invest-server.onrender.com/api/admin/stats",
+      "https://api.primeevest.com/admin/stats",
       {
         method: "GET",
         headers: { "content-type": "application/json" },
@@ -64,7 +64,7 @@ async function loadAdminStats() {
   // get admin info
   try {
     const response = await fetch(
-      "https://prime-invest-server.onrender.com/api/admin/me",
+      "https://api.primeevest.com/admin/me",
       {
         method: "GET",
         headers: { "content-type": "application/json" },
@@ -109,7 +109,7 @@ async function loadAllUsers() {
 
   try {
     const res = await fetch(
-      "https://prime-invest-server.onrender.com/api/admin/users",
+      "https://api.primeevest.com/admin/users",
       {
         method: "GET",
         headers: { "content-type": "application/json" },
@@ -261,7 +261,7 @@ const expandBtn = e.target.closest(".expandUserBtn");
     currentUserId = editBtn.dataset.id;
 try {
     const res = await fetch(
-      `https://prime-invest-server.onrender.com/api/admin/users/${currentUserId}`,
+      `https://api.primeevest.com/admin/users/${currentUserId}`,
       {
         method: "GET",
         headers: { "content-type": "application/json" },
@@ -318,7 +318,7 @@ editUserForm.addEventListener("submit", async (e) => {
   if (!Object.keys(body).length) throw new Error("No data to update.");
 
   const res = await fetch(
-    `https://prime-invest-server.onrender.com/api/admin/users/${currentUserId}`,
+    `https://api.primeevest.com/admin/users/${currentUserId}`,
     {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -356,7 +356,7 @@ window.addEventListener("DOMContentLoaded", loadAllUsers);
 
 // plans management
 
-const baseUrl = "https://prime-invest-server.onrender.com/api";
+const baseUrl = "https://api.primeevest.com";
 const plansContainer = document.getElementById("plansContainer");
 const loadingText = document.getElementById("loadingText");
 const addNewPlanBtn = document.getElementById("addNewPlanBtn");
@@ -568,7 +568,7 @@ fetchPlans();
 
 // financial services
 
-const API_BASE_URL = "https://prime-invest-server.onrender.com/api";
+const API_BASE_URL = "https://api.primeevest.com";
 const investmentContainer = document.getElementById("investmentContainer");//.
 
 // === FETCH & DISPLAY ALL INVESTMENTS ===
@@ -679,7 +679,7 @@ settingsBtn.forEach((btn) => {
 });
 // transaction management
 (function () {
-  const API_BASE_URL = "https://prime-invest-server.onrender.com/api";
+  const API_BASE_URL = "https://api.primeevest.com";
   const depositContainer = document.getElementById("depositContainer");
   const withdrawalContainer = document.getElementById("withdrawalContainer");
 
