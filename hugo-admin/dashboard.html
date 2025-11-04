@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0,viewport-fit=cover"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       rel="stylesheet"
@@ -10,21 +13,84 @@
     />
     <link rel="stylesheet" href="index.css" />
     <title>PrimeVest</title>
+
     <style>
-      /* Keep dropdown visible when hovered */
+      /* Preserve dropdown hover behavior (kept from original) */
       .dropdown:hover .dropdown-menu {
         opacity: 1 !important;
         pointer-events: auto !important;
       }
+
+      /* small visual helpers */
+      .scrollBar-remove::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollBar-remove {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      /* shimmer loader kept */
+      .shimmer {
+        background: linear-gradient(
+          90deg,
+          rgba(243, 244, 246, 1) 25%,
+          rgba(229, 231, 235, 1) 37%,
+          rgba(243, 244, 246, 1) 63%
+        );
+        background-size: 400% 100%;
+        animation: shimmer 1.2s linear infinite;
+        color: transparent;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: -400px 0;
+        }
+        100% {
+          background-position: 400px 0;
+        }
+      }
+
+      /* keep sticky header shadow subtle on mobile */
+      header.sticky {
+        z-index: 50;
+      }
+
+      /* on small screens hide table-like headers (user requested) */
+      /* We use 'hidden md:flex' on header wrappers inside markup, but keep this fallback too */
+      @media (max-width: 767px) {
+        .desktop-table-header {
+          display: none;
+        }
+      }
+      .sidebar{
+        display: flex;
+        width: 100%;
+        z-index: 1000;
+        background-color: blue;
+      }
+      /* make modals center nicely on small screens */
+      .modal-centered {
+        display: grid;
+        place-items: center;
+      }
     </style>
   </head>
-  <body class="bg-gray-50 h-screen flex flex-col">
+
+  <body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- HEADER -->
     <header
       class="p-4 flex justify-between items-center border-b sticky top-0 bg-white z-10"
     >
       <div class="flex items-center gap-1">
         <h1 class="text-2xl text-gray-700 font-semibold">PrimeVest</h1>
       </div>
+
+      <!-- MOBILE: sidebar toggle (keeps your existing class .sidebar-toggle) -->
+      <div class="sidebar-toggle md:hidden p-2 rounded hover:bg-gray-100">
+        <i class="fa fa-bars text-gray-700"></i>
+      </div>
+
       <div class="flex justify-end items-center gap-2">
         <span
           id="adminnameEl"
@@ -32,14 +98,16 @@
         >
           A
         </span>
-        <span class="flex flex-col">
+        <span class="flex flex-col hidden sm:flex">
           <h4 id="adminName" class="text-sm font-semibold">Admin-01</h4>
           <h6 class="text-xs text-gray-500">Admin</h6>
         </span>
+
         <span
           class="flex items-center w-6 h-6 justify-center border rounded-full hover:bg-gray-100 cursor-pointer relative group"
         >
           <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+
           <div
             class="flex flex-col top-9 right-0 translate-y-1 absolute w-max p-4 bg-white border rounded shadow-lg scale-0 group-hover:scale-100 transition-all duration-300"
           >
@@ -83,272 +151,228 @@
         </span>
       </div>
     </header>
-    <main class="flex w-full bg-gray-100">
-      <aside class="w-1/6 border-r h-[87vh] sticky top-[4.6em]">
-        <nav class="flex flex-col gap-2 bg-white p-4 rounded shadow h-full">
+
+    <main class="flex w-full bg-gray-100 flex-1 overflow-hidden">
+      <!-- SIDEBAR (hidden on small screens) -->
+      <aside
+        class="hidden sidebar md:block md:w-1/6 border-r h-[calc(100vh-4.6em)] sticky w-full  top-[4.6em] bg-white"
+      >
+        <nav class="flex flex-col gap-2 p-4 h-full">
           <button
-            class="w-full text-left pagesBtn block px-4 py-3 hoverd transition-all background text-white duration-300 active:bg-green-700 hover:text-white rounded font-semibold text-gray-700"
+            class="w-full text-left pagesBtn block px-4 py-3 transition-all rounded font-semibold text-gray-700 bg-transparent hover:bg-green-50 active:bg-green-700 active:text-white"
             data-target="#Dashboard"
           >
             Dashboard
           </button>
+
           <button
-            class="w-full text-left pagesBtn block px-4 py-3 hoverd transition-all duration-300 active:bg-green-700 hover:text-white rounded font-semibold text-gray-700"
+            class="w-full text-left pagesBtn block px-4 py-3 transition-all rounded font-semibold text-gray-700 hover:bg-green-50 active:bg-green-700 active:text-white"
             data-target="#UserManagements"
           >
             User Management
           </button>
+
           <button
-            class="w-full text-left pagesBtn block px-4 py-3 hoverd transition-all duration-300 active:bg-green-700 hover:text-white rounded font-semibold text-gray-700"
+            class="w-full text-left pagesBtn block px-4 py-3 transition-all rounded font-semibold text-gray-700 hover:bg-green-50 active:bg-green-700 active:text-white"
             data-target="#PlansManagement"
           >
             Plans Management
           </button>
+
           <button
-            class="w-full text-left pagesBtn block px-4 py-3 hoverd transition-all duration-300 active:bg-green-700 hover:text-white rounded font-semibold text-gray-700"
+            class="w-full text-left pagesBtn block px-4 py-3 transition-all rounded font-semibold text-gray-700 hover:bg-green-50 active:bg-green-700 active:text-white"
             data-target="#FinancialServices"
           >
             Financial Services
           </button>
+
           <button
-            class="w-full text-left pagesBtn block px-4 py-3 hoverd transition-all duration-300 active:bg-green-700 hover:text-white rounded font-semibold text-gray-700"
+            class="w-full text-left pagesBtn block px-4 py-3 transition-all rounded font-semibold text-gray-700 hover:bg-green-50 active:bg-green-700 active:text-white"
             data-target="#Transactions"
           >
             Transactions
           </button>
+
+          <!-- spacer - keep footer info or small controls -->
+          <div class="mt-auto text-xs text-gray-400">PrimeVest • Admin</div>
         </nav>
       </aside>
+
+      <!-- CONTENT AREA -->
       <div
-        class="w-5/6 h-[calc(100vh-4.6em)] flex-col flex px-4 overflow-y-scroll scrollBar-remove"
+        class="flex-1 md:w-5/6 h-[calc(100vh-4.6em)] px-3 md:px-6 py-4 overflow-y-auto scrollBar-remove"
       >
+        <!-- Dashboard section: keep exact ids & structure but responsive -->
         <section
-          class="flex flex-col w-full h-full pages overflow-y-scroll scrollBar-remove"
+          class="flex flex-col w-full h-full pages"
           id="Dashboard"
         >
-          <h2 class="text-xl font-bold sticky top-0 pt-4 pb-4 bg-gray-100 px-2">
+          <h2
+            class="text-xl font-bold sticky top-0 pt-4 pb-4 bg-gray-100 px-2 z-10"
+          >
             Welcome to PrimeVest Dashboard
           </h2>
-          <div class="w-full flex gap-3 flex-col">
-            <div class="flex w-full gap-4">
+
+          <div class="w-full flex flex-col gap-4">
+            <!-- Stats grid: responsive breakpoints keep desktop layout on md+ -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div
-                class="w-1/4 p-4 bg-white border rounded shadow flex items-center justify-between gap-4 hover:shadow-lg transition-shadow duration-300"
+                class="p-4 bg-white border rounded shadow flex items-center justify-between gap-4 hover:shadow-lg transition-shadow duration-300"
               >
-                <span class="flex flex-col gap-3">
+                <span class="flex flex-col gap-2">
                   <h3 class="text-sm font-semibold">Total users</h3>
-                  <p id="totalUsers" class="text-xl font-bold text-blue-500 shimmer">
-                    
-                  </p>
+                  <p id="totalUsers" class="text-xl font-bold text-blue-500 shimmer"></p>
                 </span>
-                <span
-                  class="w-12 h-12 bg-purple-200 p-2 flex items-center justify-center rounded-full"
-                >
-                  <img src="./assets/Group (1).png" alt="" class="" />
+                <span class="w-12 h-12 bg-purple-200 p-2 flex items-center justify-center rounded-full">
+                  <img src="./assets/Group (1).png" alt="users" class="max-w-full max-h-full" />
                 </span>
               </div>
 
               <div
-                class="w-1/4 p-4 bg-white border rounded shadow flex items-center gap-4 hover:shadow-lg transition-shadow duration-300"
+                class="p-4 bg-white border rounded shadow flex items-center justify-between gap-4 hover:shadow-lg transition-shadow duration-300"
               >
-                <span class="flex flex-col gap-3">
+                <span class="flex flex-col gap-2">
                   <h3 class="text-sm font-semibold">Total Investments</h3>
-                  <p
-                    id="totalInvestments"
-                    class="text-xl font-bold text-blue-500 shimmer"
-                  >
-                    
-                  </p>
+                  <p id="totalInvestments" class="text-xl font-bold text-blue-500 shimmer"></p>
                 </span>
-                <span
-                  class="w-12 h-12 bg-green-200 p-2 flex items-center justify-center rounded-full"
-                >
-                  <img src="./assets/icon.png" alt="" class="" />
+                <span class="w-12 h-12 bg-green-200 p-2 flex items-center justify-center rounded-full">
+                  <img src="./assets/icon.png" alt="invest" class="max-w-full max-h-full" />
                 </span>
               </div>
 
               <div
-                class="w-1/4 p-4 bg-white border rounded shadow flex items-center gap-4 hover:shadow-lg transition-shadow duration-300"
+                class="p-4 bg-white border rounded shadow flex items-center justify-between gap-4 hover:shadow-lg transition-shadow duration-300"
               >
-                <span class="flex flex-col gap-3">
+                <span class="flex flex-col gap-2">
                   <h3 class="text-sm font-semibold">Total Deposits</h3>
-                  <p id="totalDeposits" class="text-xl font-bold text-blue-500 shimmer">
-                    
-                  </p>
+                  <p id="totalDeposits" class="text-xl font-bold text-blue-500 shimmer"></p>
                 </span>
-                <span
-                  class="w-12 h-12 bg-yellow-100 p-2 flex items-center justify-center rounded-full"
-                >
-                  <img src="./assets/icon (1).png" alt="" class="" />
+                <span class="w-12 h-12 bg-yellow-100 p-2 flex items-center justify-center rounded-full">
+                  <img src="./assets/icon (1).png" alt="deposits" class="max-w-full max-h-full" />
                 </span>
               </div>
 
               <div
-                class="w-1/4 p-4 bg-white border rounded shadow flex items-center gap-4 hover:shadow-lg transition-shadow duration-300"
+                class="p-4 bg-white border rounded shadow flex items-center justify-between gap-4 hover:shadow-lg transition-shadow duration-300"
               >
-                <span class="flex flex-col gap-3">
+                <span class="flex flex-col gap-2">
                   <h3 class="text-sm font-semibold">Total Withdrawals</h3>
-                  <p
-                    id="totalWithdrawals"
-                    class="text-xl font-bold text-blue-500 shimmer"
-                  >
-                    
-                  </p>
+                  <p id="totalWithdrawals" class="text-xl font-bold text-blue-500 shimmer"></p>
                 </span>
-                <span
-                  class="w-12 h-12 bg-pink-100 p-2 flex items-center justify-center rounded-full"
-                >
-                  <img src="./assets/icon (2).png" alt="" class="" />
+                <span class="w-12 h-12 bg-pink-100 p-2 flex items-center justify-center rounded-full">
+                  <img src="./assets/icon (2).png" alt="withdrawals" class="max-w-full max-h-full" />
                 </span>
               </div>
             </div>
-             <div class="flex w-full gap-4">
+
+            <!-- second row of stats (same grid behavior) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div
-                class="w-1/4 p-4 bg-white border rounded shadow flex items-center justify-between gap-4 hover:shadow-lg transition-shadow duration-300"
+                class="p-4 bg-white border rounded shadow flex items-center justify-between gap-4 hover:shadow-lg transition-shadow duration-300"
               >
-                <span class="flex flex-col gap-3">
+                <span class="flex flex-col gap-2">
                   <h3 class="text-sm font-semibold">Total platform earnings</h3>
-                  <p id="totalPlatformEarnings" class="text-xl font-bold text-blue-500 shimmer">
-                    
-                  </p>
+                  <p id="totalPlatformEarnings" class="text-xl font-bold text-blue-500 shimmer"></p>
                 </span>
-                <span
-                  class="w-12 h-12 bg-purple-200 p-2 flex items-center justify-center rounded-full"
-                >
-                    <i class="fas fa-dollar-sign"></i>
+                <span class="w-12 h-12 bg-purple-200 p-2 flex items-center justify-center rounded-full">
+                  <i class="fas fa-dollar-sign text-gray-700"></i>
                 </span>
               </div>
 
               <div
-                class="w-1/4 p-4 bg-white border rounded shadow flex items-center gap-4 hover:shadow-lg transition-shadow duration-300"
+                class="p-4 bg-white border rounded shadow flex items-center justify-between gap-4 hover:shadow-lg transition-shadow duration-300"
               >
-                <span class="flex flex-col gap-3">
+                <span class="flex flex-col gap-2">
                   <h3 class="text-sm font-semibold">Total withdrawn amount</h3>
-                  <p
-                    id="totalWithdrawalAmount"
-                    class="text-xl font-bold text-blue-500 shimmer"
-                  >
-                    
-                  </p>
+                  <p id="totalWithdrawalAmount" class="text-xl font-bold text-blue-500 shimmer"></p>
                 </span>
-                <span
-                  class="w-12 h-12 bg-green-200 p-2 flex items-center justify-center rounded-full"
-                >
-                   <i class="fas fa-dollar-sign"></i>
+                <span class="w-12 h-12 bg-green-200 p-2 flex items-center justify-center rounded-full">
+                  <i class="fas fa-dollar-sign text-gray-700"></i>
                 </span>
               </div>
 
               <div
-                class="w-1/4 p-4 bg-white border rounded shadow flex items-center gap-4 hover:shadow-lg transition-shadow duration-300"
+                class="p-4 bg-white border rounded shadow flex items-center justify-between gap-4 hover:shadow-lg transition-shadow duration-300"
               >
-                <span class="flex flex-col gap-3">
+                <span class="flex flex-col gap-2">
                   <h3 class="text-sm font-semibold">Total deposited amount</h3>
-                  <p id="totalDepositAmount" class="text-xl font-bold text-blue-500 shimmer">
-                    
-                  </p>
+                  <p id="totalDepositAmount" class="text-xl font-bold text-blue-500 shimmer"></p>
                 </span>
-                <span
-                  class="w-12 h-12 bg-yellow-100 p-2 flex items-center justify-center rounded-full"
-                >
-                    <i class="fas fa-dollar-sign"></i>
+                <span class="w-12 h-12 bg-yellow-100 p-2 flex items-center justify-center rounded-full">
+                  <i class="fas fa-dollar-sign text-gray-700"></i>
                 </span>
               </div>
 
               <div
-                class="w-1/4 p-4 bg-white border rounded shadow flex items-center gap-4 hover:shadow-lg transition-shadow duration-300"
+                class="p-4 bg-white border rounded shadow flex items-center justify-between gap-4 hover:shadow-lg transition-shadow duration-300"
               >
-                <span class="flex flex-col gap-3">
+                <span class="flex flex-col gap-2">
                   <h3 class="text-sm font-semibold">Total Invested amount</h3>
-                  <p
-                    id="totalInvestmentAmount"
-                    class="text-xl font-bold text-blue-500 shimmer"
-                  >
-                    
-                  </p>
+                  <p id="totalInvestmentAmount" class="text-xl font-bold text-blue-500 shimmer"></p>
                 </span>
-                <span
-                  class="w-12 h-12 bg-pink-100 p-2 flex items-center justify-center rounded-full"
-                >
-                 <i class="fas fa-dollar-sign"></i>
-
+                <span class="w-12 h-12 bg-pink-100 p-2 flex items-center justify-center rounded-full">
+                  <i class="fas fa-dollar-sign text-gray-700"></i>
                 </span>
               </div>
             </div>
-            <div
-              class="w-full bg-white rounded flex gap-3 flex-col px-4 py-3 min-h-[400px]"
-            >
+
+            <!-- Transaction Overview (keeps original markup) -->
+            <div class="w-full bg-white rounded flex gap-3 flex-col px-4 py-3 min-h-[300px]">
               <h1 class="text-xl font-bold px-4">Your Transaction Overview</h1>
-              <div
-                class="w-full h-full bg-gray-100 flex items-center justify-center"
-              >
-                <img src="./assets/chart.jpg" alt="" />
+              <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                <!-- Keep existing chart placeholder - your JS/chart lib can replace this -->
+                <img src="./assets/chart.jpg" alt="chart" class="max-w-full h-auto" />
               </div>
             </div>
           </div>
         </section>
+
+        <!-- USER MANAGEMENT -->
         <section
-          class="hidden w-full pages overflow-y-scroll scrollBar-remove h-full"
+          class="hidden w-full pages h-full"
           id="UserManagements"
         >
-        <div class="flex items-center justify-between mb-4">
-  
-  <input
-    type="text"
-    id="userSearch"
-    placeholder="Search by username..."
-    class="border border-gray-300 rounded-lg px-3 py-2 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-400"
-  />
-</div>
+          <div class="flex items-center justify-between mb-4">
+            <input
+              type="text"
+              id="userSearch"
+              placeholder="Search by username..."
+              class="border border-gray-300 rounded-lg px-3 py-2 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
 
-          <h2 class="text-xl font-bold mb-4 sticky py-4 top-0 bg-gray-100">
+          <h2 class="text-xl font-bold mb-4 sticky top-0 py-4 bg-gray-100">
             User Management
           </h2>
 
-          <div
-            class="w-full bg-white rounded flex gap-3 flex-col px-4 py-3 min-h-full"
-          >
+          <div class="w-full bg-white rounded flex gap-3 flex-col px-4 py-3 min-h-full">
             <h1 class="text-xl font-bold px-4">All Users</h1>
 
-            <div class="w-full bg-gray-100 rounded-md">
-              <div
-                class="w-full flex p-4 items-center justify-between text-sm font-semibold"
-              >
-                <span class="text-gray-500 w-[14%] text-center">Username</span>
-                <span class="text-gray-500 w-[14%] text-center"
-                  >Phone Number</span
-                >
-                <span class="text-gray-500 w-[14%] text-center"
-                  >Welfare Balance</span
-                >
-                <span class="text-gray-500 w-[14%] text-center"
-                  >Investment Balance</span
-                >
-              
-                <span class="text-gray-500 w-[14%] text-center">Status</span>
-                <span class="text-gray-500 w-[14%] text-center">Actions</span>
-              </div>
+            <!-- TABLE HEADER: visible on md+ only (hidden on small screens as requested) -->
+            <div class="w-full bg-gray-100 rounded-md desktop-table-header hidden md:block">
+             
             </div>
 
             <div id="loader" class="loader-overlay hidden">
               <div class="spinner"></div>
             </div>
 
-            <!-- Dynamic user list -->
+            <!-- Dynamic user list (left empty on mobile for your JS to inject cards) -->
             <div id="usersContainer" class="flex flex-col w-full"></div>
           </div>
         </section>
 
-        <!-- 🟦 Edit User Modal -->
+        <!-- Edit User Modal (keeps your IDs & inputs unchanged) -->
         <div
           id="editUserModal"
-          class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center scale-0 transition-all duration-300 z-50"
+          class="fixed inset-0 bg-black bg-opacity-50 modal-centered hidden z-50 p-4"
         >
-          <div class="bg-white w-[90%] max-w-md rounded-lg shadow-lg p-6">
+          <div class="bg-white w-[96%] max-w-md rounded-lg shadow-lg p-6">
             <h2 class="text-xl font-bold mb-4">Edit User</h2>
 
             <form id="editUserForm" class="flex flex-col gap-3">
               <div>
-                <label class="block text-gray-600 text-sm mb-1"
-                  >Account Status</label
-                >
+                <label class="block text-gray-600 text-sm mb-1">Account Status</label>
                 <select
                   id="accountStatusInput"
                   class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200"
@@ -359,21 +383,8 @@
                 </select>
               </div>
 
-              <!-- <div>
-                <label class="block text-gray-600 text-sm mb-1"
-                  >Account Balance (₦)</label
-                >
-                <input
-                  type="number"
-                  id="accountBalanceInput"
-                  class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200"
-                />
-              </div> -->
-
               <div>
-                <label class="block text-gray-600 text-sm mb-1"
-                  >Investment Balance (₦)</label
-                >
+                <label class="block text-gray-600 text-sm mb-1">Investment Balance (₦)</label>
                 <input
                   type="number"
                   id="investmentBalanceInput"
@@ -382,9 +393,7 @@
               </div>
 
               <div>
-                <label class="block text-gray-600 text-sm mb-1"
-                  >Welfare Balance (₦)</label
-                >
+                <label class="block text-gray-600 text-sm mb-1">Welfare Balance (₦)</label>
                 <input
                   type="number"
                   id="welfareBalanceInput"
@@ -412,13 +421,12 @@
           </div>
         </div>
 
+        <!-- PLANS MANAGEMENT -->
         <section
-          class="hidden w-full pages overflow-y-scroll scrollBar-remove h-full"
+          class="hidden w-full pages h-full"
           id="PlansManagement"
         >
-          <div
-            class="flex items-center justify-between mb-4 sticky top-0 bg-gray-100 py-4 px-2"
-          >
+          <div class="flex items-center justify-between mb-4 sticky top-0 bg-gray-100 py-4 px-2">
             <h2 class="text-xl font-bold">Plans Management</h2>
             <button
               class="background text-white px-4 py-2 rounded font-semibold active:scale-95 transition-all duration-300"
@@ -428,7 +436,6 @@
             </button>
           </div>
 
-          <!-- Search Bar -->
           <div class="flex w-full justify-between px-2">
             <h2 class="text-xl font-bold">Plans</h2>
             <input
@@ -439,117 +446,53 @@
             />
           </div>
 
-          <!-- Table Header -->
           <div class="w-full bg-white rounded flex flex-col px-4 py-3 mt-4">
-            <div class="w-full bg-gray-100 rounded-md">
-              <div class="w-full flex p-4 items-center justify-between">
-                <span class="font-semibold">Plan Name</span>
-                <span class="font-semibold">Daily Return</span>
-                <span class="font-semibold">Duration</span>
-                <span class="font-semibold">Total Return</span>
-                <span class="font-semibold">Price</span>
-                <span class="font-semibold">Status</span>
-                <span class="font-semibold">Actions</span>
-              </div>
+            <div class="w-full bg-gray-100 rounded-md desktop-table-header hidden md:block">
+              
             </div>
 
-            <!-- Dynamic Container -->
             <div class="w-full flex flex-col gap-2" id="plansContainer">
-              <p class="text-center text-gray-400 py-8" id="loadingText">
-                Loading plans...
-              </p>
+              <p class="text-center text-gray-400 py-8" id="loadingText">Loading plans...</p>
             </div>
           </div>
 
           <!-- Create / Edit Modal -->
           <div
             id="planModal"
-            class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
+            class="hidden fixed inset-0 bg-black bg-opacity-40 modal-centered z-50 p-4"
           >
-            <div
-              class="bg-white rounded-lg p-6 w-[90%] md:w-[500px] shadow-xl relative"
-            >
-              <h3 class="text-xl font-bold mb-4" id="modalTitle">
-                Create Plan
-              </h3>
+            <div class="bg-white rounded-lg p-6 w-[96%] max-w-lg shadow-xl relative">
+              <h3 class="text-xl font-bold mb-4" id="modalTitle">Create Plan</h3>
               <form id="planForm" class="flex flex-col gap-3">
                 <input type="hidden" id="planId" />
-                <input
-                  type="text"
-                  id="planTitle"
-                  placeholder="Plan Title"
-                  class="border p-2 rounded"
-                  required
-                />
-                <input
-                  type="number"
-                  id="planPrice"
-                  placeholder="Price"
-                  class="border p-2 rounded"
-                  required
-                />
-                <input
-                  type="number"
-                  id="planDailyIncome"
-                  placeholder="Daily Income"
-                  class="border p-2 rounded"
-                  required
-                />
-                <input type="text"
-                id="planType"
-                placeholder="plan type eg:investment"
-                class="border p-2 rounded"
-                required
-                >
-                <input
-                  type="number"
-                  id="planDurationDays"
-                  placeholder="Duration (Days)"
-                  class="border p-2 rounded"
-                  required
-                />
-                <input
-                  type="number"
-                  id="planTotalIncome"
-                  placeholder="Total Income"
-                  class="border p-2 rounded"
-                  required
-                />
+                <input type="text" id="planTitle" placeholder="Plan Title" class="border p-2 rounded" required />
+                <input type="number" id="planPrice" placeholder="Price" class="border p-2 rounded" required />
+                <input type="number" id="planDailyIncome" placeholder="Daily Income" class="border p-2 rounded" required />
+                <input type="text" id="planType" placeholder="plan type eg:investment" class="border p-2 rounded" required />
+                <input type="number" id="planDurationDays" placeholder="Duration (Days)" class="border p-2 rounded" required />
+                <input type="number" id="planTotalIncome" placeholder="Total Income" class="border p-2 rounded" required />
                 <select id="planStatus" class="border p-2 rounded">
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>
-                <textarea
-                  id="planDescription"
-                  placeholder="Description"
-                  class="border p-2 rounded"
-                ></textarea>
+                <textarea id="planDescription" placeholder="Description" class="border p-2 rounded"></textarea>
 
-                <button
-                  type="submit"
-                  class="background text-white px-4 py-2 rounded font-semibold mt-2 active:scale-95 transition-all"
-                  id="savePlanBtn"
-                >
+                <button type="submit" class="background text-white px-4 py-2 rounded font-semibold mt-2 active:scale-95 transition-all" id="savePlanBtn">
                   Save Plan
                 </button>
               </form>
-              <button
-                class="absolute top-2 right-4 text-gray-500 hover:text-red-500 text-xl"
-                id="closeModal"
-              >
-                ×
-              </button>
+
+              <button class="absolute top-2 right-4 text-gray-500 hover:text-red-500 text-xl" id="closeModal">×</button>
             </div>
           </div>
         </section>
 
+        <!-- FINANCIAL SERVICES -->
         <section
-          class="hidden w-full pages overflow-y-scroll scrollBar-remove"
+          class="hidden w-full pages h-full"
           id="FinancialServices"
         >
-          <h2 class="text-xl font-bold py-4 sticky top-0 bg-gray-100">
-            Financial Services
-          </h2>
+          <h2 class="text-xl font-bold py-4 sticky top-0 bg-gray-100">Financial Services</h2>
 
           <div class="flex w-full justify-between">
             <h2 class="text-xl font-bold">Investments</h2>
@@ -561,188 +504,120 @@
             />
           </div>
 
-          <div
-            class="w-full bg-white rounded flex flex-col px-4 py-3 min-h-full mt-4"
-          >
-            <!-- Table Heading -->
-            <div class="w-full bg-gray-100 rounded-md">
-              <div class="w-full flex p-4 items-center justify-between">
-                <span class="text-gray-500 font-semibold">Plan Name</span>
-                <span class="text-gray-500 font-semibold">Username</span>
-                <span class="text-gray-500 font-semibold">Amount Invested</span>
-                <span class="text-gray-500 font-semibold">Profit</span>
-                <span class="text-gray-500 font-semibold">Start Date</span>
-                <span class="text-gray-500 font-semibold">End Date</span>
-                <span class="text-gray-500 font-semibold">Status</span>
-              </div>
-            </div>
+          <div class="w-full bg-white rounded flex flex-col px-4 py-3 min-h-full mt-4">
+           
 
-            <!-- Container where investment cards will be injected -->
-            <div
-              class="w-full flex flex-col gap-2 h-full"
-              id="investmentContainer"
-            ></div>
+            <div class="w-full flex flex-col gap-2 h-full" id="investmentContainer"></div>
           </div>
         </section>
 
-        <!-- Edit Status Modal -->
-        <div
-          id="editModalInv"
-          class="fixed inset-0 bg-black bg-opacity-40 hidden justify-center items-center z-50"
-        >
-          <div class="bg-white rounded-xl p-6 w-96 shadow-lg">
+        <!-- Edit Investment Modal -->
+        <div id="editModalInv" class="fixed inset-0 bg-black bg-opacity-40 hidden z-50 modal-centered p-4">
+          <div class="bg-white rounded-xl p-6 w-[96%] max-w-md shadow-lg">
             <h3 class="text-lg font-semibold mb-4">Edit Investment Status</h3>
-            <select
-              id="statusSelectInv"
-              class="border p-2 w-full rounded mb-4 focus:outline-green-500"
-            >
+            <select id="statusSelectInv" class="border p-2 w-full rounded mb-4 focus:outline-green-500">
               <option value="active">Active</option>
               <option value="completed">Completed</option>
             </select>
             <div class="flex justify-end gap-3">
-              <button
-                id="cancelEditInv"
-                class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                id="saveEditInv"
-                class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-all"
-              >
-                Save
-              </button>
+              <button id="cancelEditInv" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition-all">Cancel</button>
+              <button id="saveEditInv" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-all">Save</button>
             </div>
           </div>
         </div>
 
+        <!-- TRANSACTIONS -->
         <section
-          class="hidden w-full pages overflow-y-scroll scrollBar-remove h-full"
+          class="hidden w-full pages h-full"
           id="Transactions"
         >
-          <h2 class="text-xl font-bold py-4 sticky top-0 bg-gray-100">
-            Your Transactions
-          </h2>
+          <h2 class="text-xl font-bold py-4 sticky top-0 bg-gray-100">Your Transactions</h2>
 
           <div class="flex w-full border-b gap-6">
-            <label
-              class="text-gray-500 font-semibold text-md py-3 borderButton borderhover transactionBtn"
-              data-target="#Deposits"
-              >Deposits</label
-            >
-            <label
-              class="text-gray-500 font-semibold text-md py-3 borderhover transactionBtn"
-              data-target="#Withdrawals"
-              >Withdrawals</label
-            >
+            <label class="text-gray-500 font-semibold text-md py-3 borderButton borderhover transactionBtn" data-target="#Deposits">Deposits</label>
+            <label class="text-gray-500 font-semibold text-md py-3 borderhover transactionBtn" data-target="#Withdrawals">Withdrawals</label>
           </div>
 
           <div class="w-full flex flex-col min-h-full bg-white px-3 pt-3">
             <!-- Deposits -->
-            <section
-              class="flex flex-col w-full Settings h-full items-center gap-16"
-              id="Deposits"
-            >
-              <div
-                class="w-full bg-white rounded flex gap-3 flex-col px-4 py-3 min-h-full mt-4"
-              >
-                <!-- Headings (aligned with deposit schema) -->
-                <div class="w-full bg-gray-100 rounded-md">
-                  <div class="w-full flex p-4 items-center justify-between">
-                    <span class="text-gray-500 font-semibold"
-                      >Transaction ID</span
-                    >
-                    <span class="text-gray-500 font-semibold">Username</span>
-                    <span class="text-gray-500 font-semibold">Amount</span>
-                    <span class="text-gray-500 font-semibold"
-                      >Balance Type</span
-                    >
-                    <span class="text-gray-500 font-semibold">Funded At</span>
-                    <span class="text-gray-500 font-semibold">Sender</span>
-                    <span class="text-gray-500 font-semibold">Status</span>
-                    <span class="text-gray-500 font-semibold">Actions</span>
-                  </div>
-                </div>
+            <section class="flex flex-col w-full Settings h-full items-center gap-16" id="Deposits">
+              <div class="w-full bg-white rounded flex gap-3 flex-col px-4 py-3 min-h-full mt-4">
+              
 
-                <!-- Empty container — JS will append deposit cards here -->
-                <div
-                  class="w-full flex flex-col gap-2 h-full"
-                  id="depositContainer"
-                ></div>
+                <div class="w-full flex flex-col gap-2 h-full" id="depositContainer"></div>
               </div>
             </section>
 
             <!-- Withdrawals -->
-            <section
-              class="flex flex-col w-full Settings items-center gap-16 hidden"
-              id="Withdrawals"
-            >
-              <div
-                class="w-full bg-white rounded flex gap-3 flex-col px-4 py-3 min-h-full mt-4"
-              >
-                <!-- Headings (aligned with withdrawal schema) -->
-                <div class="w-full bg-gray-100 rounded-md">
-                  <div class="w-full flex p-4 items-center justify-between">
-                    <span class="text-gray-500 font-semibold">Request ID</span>
-                    <span class="text-gray-500 font-semibold">Username</span>
-                    <span class="text-gray-500 font-semibold">Amount</span>
-                    <span class="text-gray-500 font-semibold"
-                      >Balance Type</span
-                    >
-                    <span class="text-gray-500 font-semibold"
-                      >Requested At</span
-                    >
-                    <span class="text-gray-500 font-semibold">Status</span>
-                    <span class="text-gray-500 font-semibold">Actions</span>
-                  </div>
-                </div>
+            <section class="flex flex-col w-full Settings items-center gap-16 hidden" id="Withdrawals">
+              <div class="w-full bg-white rounded flex gap-3 flex-col px-4 py-3 min-h-full mt-4">
+               
 
-                <!-- Empty container — JS will append withdrawal cards here -->
-                <div
-                  class="w-full flex flex-col gap-2 h-full"
-                  id="withdrawalContainer"
-                ></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="withdrawalContainer"></div>
+
               </div>
             </section>
           </div>
         </section>
 
-        <!-- Edit Status Modal (reused for deposits & withdrawals) -->
-        <div
-          id="editModal2"
-          class="fixed inset-0 bg-black bg-opacity-40 hidden z-50 items-center justify-center"
-        >
-          <div class="bg-white rounded-xl p-6 w-96 shadow-lg">
-            <h3 id="modalTitle2" class="text-lg font-semibold mb-4">
-              Edit Status
-            </h3>
+        <!-- Edit Status Modal (reused) -->
+        <div id="editModal2" class="fixed inset-0 bg-black bg-opacity-40 hidden z-50 modal-centered p-4">
+          <div class="bg-white rounded-xl p-6 w-[96%] max-w-md shadow-lg">
+            <h3 id="modalTitle2" class="text-lg font-semibold mb-4">Edit Status</h3>
 
-            <select
-              id="statusSelect2"
-              class="border p-2 w-full rounded mb-4 focus:outline-green-500"
-            >
-              <!-- options injected by JS based on type -->
-            </select>
+            <select id="statusSelect2" class="border p-2 w-full rounded mb-4 focus:outline-green-500"></select>
 
             <div class="flex justify-end gap-3">
-              <button
-                id="cancelEdit2"
-                class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition-all"
-              >
-                Cancel
-              </button>
-              <button
-              type="button"
-                id="saveEditTransaction"
-                class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-all"
-              >
-                Save
-              </button>
+              <button id="cancelEdit2" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition-all">Cancel</button>
+              <button type="button" id="saveEditTransaction" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-all">Save</button>
             </div>
           </div>
         </div>
       </div>
     </main>
+  <!-- <script>
+      // Sidebar toggle functionality
+const sidebarToggle = document.querySelector('.sidebar-toggle');
+const sidebar = document.querySelector('.sidebar');
+
+if (sidebarToggle && sidebar) {
+  sidebarToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('hidden');
+  });
+}
+
+    </script> -->
+    <script>
+  // Sidebar toggle functionality
+  const sidebarToggle = document.querySelector('.sidebar-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  const pageButtons = document.querySelectorAll('.pagesBtn');
+
+  if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('hidden');
+    });
+  }
+
+  // Collapse sidebar when a page button is clicked on mobile
+  pageButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Only collapse on small screens
+      if (window.innerWidth < 768) {
+        sidebar.classList.add('hidden');
+      }
+    });
+  });
+
+  // Optional: close sidebar if window is resized to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768) {
+      sidebar.classList.remove('hidden');
+    }
+  });
+</script>
+
+    <!-- keep your JS file reference unchanged -->
     <script src="./js/index.js"></script>
   </body>
 </html>

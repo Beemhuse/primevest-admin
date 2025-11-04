@@ -48,3 +48,31 @@
     background-position: -100% 0;
   }
 }
+/* Sidebar Toggle Button */
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  border: 1.5px solid #d1d5db; /* gray-300 */
+  background-color: #ffffff;
+  color: #374151; /* gray-700 */
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.sidebar-toggle:hover {
+  background-color: #10b981; /* green-500 */
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+@media (min-width: 768px) {
+  .sidebar-toggle {
+    display: none; /* Hide toggle on desktop */
+  }
+}
+

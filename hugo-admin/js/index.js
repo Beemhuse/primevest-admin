@@ -136,35 +136,66 @@ async function loadAllUsers() {
 
   // main visible row
   userRow.innerHTML = `
-    <div class="flex items-center justify-between">
-      <span class="text-gray-700 w-[14%] text-center truncate">${user.username}</span>
-      <span class="text-gray-700 w-[14%] text-center truncate">${user.phoneNumber}</span>
-      <span class="text-gray-700 w-[14%] text-center truncate">${user.welfareRechargeBalance || 0.0}</span>
-      <span class="text-gray-700 w-[14%] text-center truncate">${user.investmentRechargeBalance || 0.0}</span>
-      <span class="text-gray-700 w-[14%] text-center truncate">
-        <p class="font-semibold w-max ${
+  <div class="bg-white rounded-2xl shadow-sm border p-4 mb-4 transition hover:shadow-md">
+  <!-- Top summary -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+    <div class="flex flex-col sm:flex-row sm:flex-wrap sm:gap-4 md:gap-0 md:w-5/6">
+      <p class="text-gray-700 text-sm font-medium truncate">
+        <span class="font-semibold text-gray-600">Username:</span> ${user.username}
+      </p>
+      <p class="text-gray-700 text-sm font-medium truncate">
+        <span class="font-semibold text-gray-600">Phone:</span> ${user.phoneNumber}
+      </p>
+      <p class="text-gray-700 text-sm font-medium truncate">
+        <span class="font-semibold text-gray-600">Welfare Bal:</span> ${user.welfareRechargeBalance || 0.0}
+      </p>
+      <p class="text-gray-700 text-sm font-medium truncate">
+        <span class="font-semibold text-gray-600">Inv Bal:</span> ${user.investmentRechargeBalance || 0.0}
+      </p>
+      <p>
+        <span class="inline-block font-semibold px-3 py-1 rounded-full text-xs ${
           user.accountStatus === "active"
             ? "bg-green-100 text-green-700"
             : "bg-red-100 text-red-700"
-        } px-2 py-1 rounded-full capitalize">${user.accountStatus}</p>
-      </span>
-      <span class="text-gray-500 w-[14%] relative flex items-center justify-center gap-3">
-        <span class="flex items-center gap-2 border p-1 px-2 hover:text-blue-500 cursor-pointer hover:bg-blue-100 rounded-md transition-all editUserBtn" data-id="${user._id}">
-          <i class="fas fa-edit text-[10px]"></i>
-          <span class="text-[10px] font-semibold">Edit</span>
-        </span>
-        <button class="expandUserBtn border px-2 py-1 text-[10px] rounded-md hover:bg-gray-100 transition">
-          <i class="fas fa-chevron-down"></i>
-        </button>
-      </span>
+        }">${user.accountStatus}</span>
+      </p>
     </div>
 
-    <!-- expandable section -->
-    <div class="user-extra hidden mt-2 p-3 bg-gray-50 rounded-lg grid grid-cols-3 gap-4 text-xs">
-      <div><span class="font-semibold text-gray-600">Bank Name:</span> <span>${user.bankName || "none"}</span></div>
-      <div><span class="font-semibold text-gray-600">Account Number:</span> <span>${user.accountNumber || "none"}</span></div>
-      <div><span class="font-semibold text-gray-600">Account Name:</span> <span>${user.accountName || "none"}</span></div>
+    <!-- Action buttons -->
+    <div class="flex items-center justify-end gap-2">
+      <button
+        class="flex items-center gap-1 border px-3 py-1 text-xs rounded-md hover:bg-blue-50 hover:text-blue-600 transition editUserBtn"
+        data-id="${user._id}"
+      >
+        <i class="fas fa-edit text-[10px]"></i>
+        <span class="font-medium">Edit</span>
+      </button>
+
+      <button
+        class="expandUserBtn border px-3 py-1 text-xs rounded-md hover:bg-gray-100 transition"
+      >
+        <i class="fas fa-chevron-down"></i>
+      </button>
     </div>
+  </div>
+
+  <!-- Expandable details -->
+  <div class="user-extra hidden mt-3 p-3 bg-gray-50 rounded-lg grid sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+    <div>
+      <span class="font-semibold text-gray-600">Bank Name:</span>
+      <span>${user.bankName || "none"}</span>
+    </div>
+    <div>
+      <span class="font-semibold text-gray-600">Account Number:</span>
+      <span>${user.accountNumber || "none"}</span>
+    </div>
+    <div>
+      <span class="font-semibold text-gray-600">Account Name:</span>
+      <span>${user.accountName || "none"}</span>
+    </div>
+  </div>
+</div>
+
   `;
 
   usersContainer.appendChild(userRow);
@@ -197,34 +228,66 @@ searchInput.addEventListener("input", (e) => {
       "w-full px-4 py-2 border-b flex flex-col hover:bg-gray-50 transition-all text-sm";
 
     userRow.innerHTML = `
-      <div class="flex items-center justify-between">
-        <span class="text-gray-700 w-[14%] text-center truncate">${user.username}</span>
-        <span class="text-gray-700 w-[14%] text-center truncate">${user.phoneNumber}</span>
-        <span class="text-gray-700 w-[14%] text-center truncate">${user.welfareRechargeBalance || 0.0}</span>
-        <span class="text-gray-700 w-[14%] text-center truncate">${user.investmentRechargeBalance || 0.0}</span>
-        <span class="text-gray-700 w-[14%] text-center truncate">
-          <p class="font-semibold w-max ${
-            user.accountStatus === "active"
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
-          } px-2 py-1 rounded-full capitalize">${user.accountStatus}</p>
-        </span>
-        <span class="text-gray-500 w-[14%] relative flex items-center justify-center gap-3">
-          <span class="flex items-center gap-2 border p-1 px-2 hover:text-blue-500 cursor-pointer hover:bg-blue-100 rounded-md transition-all editUserBtn" data-id="${user._id}">
-            <i class="fas fa-edit text-[10px]"></i>
-            <span class="text-[10px] font-semibold">Edit</span>
-          </span>
-          <button class="expandUserBtn border px-2 py-1 text-[10px] rounded-md hover:bg-gray-100 transition">
-            <i class="fas fa-chevron-down"></i>
-          </button>
-        </span>
-      </div>
+    <div class="bg-white rounded-2xl shadow-sm border p-4 mb-4 transition hover:shadow-md">
+  <!-- Top summary -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+    <div class="flex flex-col sm:flex-row sm:flex-wrap sm:gap-4 md:gap-0 md:w-5/6">
+      <p class="text-gray-700 text-sm font-medium truncate">
+        <span class="font-semibold text-gray-600">Username:</span> ${user.username}
+      </p>
+      <p class="text-gray-700 text-sm font-medium truncate">
+        <span class="font-semibold text-gray-600">Phone:</span> ${user.phoneNumber}
+      </p>
+      <p class="text-gray-700 text-sm font-medium truncate">
+        <span class="font-semibold text-gray-600">Welfare Bal:</span> ${user.welfareRechargeBalance || 0.0}
+      </p>
+      <p class="text-gray-700 text-sm font-medium truncate">
+        <span class="font-semibold text-gray-600">Inv Bal:</span> ${user.investmentRechargeBalance || 0.0}
+      </p>
+      <p>
+        <span class="inline-block font-semibold px-3 py-1 rounded-full text-xs ${
+          user.accountStatus === "active"
+            ? "bg-green-100 text-green-700"
+            : "bg-red-100 text-red-700"
+        }">${user.accountStatus}</span>
+      </p>
+    </div>
 
-      <div class="user-extra hidden mt-2 p-3 bg-gray-50 rounded-lg grid grid-cols-3 gap-4 text-xs">
-        <div><span class="font-semibold text-gray-600">Bank Name:</span> <span>${user.bankName || "N/A"}</span></div>
-        <div><span class="font-semibold text-gray-600">Account Number:</span> <span>${user.accountNumber || "N/A"}</span></div>
-        <div><span class="font-semibold text-gray-600">Account Name:</span> <span>${user.accountName || "N/A"}</span></div>
-      </div>
+    <!-- Action buttons -->
+    <div class="flex items-center justify-end gap-2">
+      <button
+        class="flex items-center gap-1 border px-3 py-1 text-xs rounded-md hover:bg-blue-50 hover:text-blue-600 transition editUserBtn"
+        data-id="${user._id}"
+      >
+        <i class="fas fa-edit text-[10px]"></i>
+        <span class="font-medium">Edit</span>
+      </button>
+
+      <button
+        class="expandUserBtn border px-3 py-1 text-xs rounded-md hover:bg-gray-100 transition"
+      >
+        <i class="fas fa-chevron-down"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Expandable details -->
+  <div class="user-extra hidden mt-3 p-3 bg-gray-50 rounded-lg grid sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+    <div>
+      <span class="font-semibold text-gray-600">Bank Name:</span>
+      <span>${user.bankName || "none"}</span>
+    </div>
+    <div>
+      <span class="font-semibold text-gray-600">Account Number:</span>
+      <span>${user.accountNumber || "none"}</span>
+    </div>
+    <div>
+      <span class="font-semibold text-gray-600">Account Name:</span>
+      <span>${user.accountName || "none"}</span>
+    </div>
+  </div>
+</div>
+
     `;
     usersContainer.appendChild(userRow);
   });
@@ -400,35 +463,65 @@ function renderPlans(plans) {
   plansContainer.innerHTML = plans
     .map(
       (plan) => `
-    <div class="w-full rounded-md px-4 py-2 border-b flex items-center justify-between planRow">
-      <span class="text-gray-700 w-1/6">${plan.title}</span>
-      <span class="text-gray-700 w-1/6">₦${plan.dailyIncome}</span>
-      <span class="text-gray-700 w-1/6">${plan.durationDays} Days</span>
-      <span class="text-gray-700 w-1/6">₦${plan.totalIncome}</span>
-      <span class="text-gray-700 w-1/6">₦${plan.price.toLocaleString()}</span>
-      <span class="text-gray-700 w-1/6">
-        <p class="text-white font-semibold w-max ${
+      <div class="bg-white rounded-xl shadow-sm border p-4 mb-4 transition hover:shadow-md planRow">
+
+  <!-- Plan main info -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+    <div class="flex flex-col sm:flex-row sm:flex-wrap sm:gap-4 md:gap-0 md:w-5/6">
+      <p class="text-gray-700 text-sm font-medium truncate">
+        <span class="font-semibold text-gray-600">Title:</span> ${plan.title}
+      </p>
+      <p class="text-gray-700 text-sm font-medium truncate">
+        <span class="font-semibold text-gray-600">Daily Income:</span> ₦${plan.dailyIncome}
+      </p>
+      <p class="text-gray-700 text-sm font-medium truncate">
+        <span class="font-semibold text-gray-600">Duration:</span> ${plan.durationDays} Days
+      </p>
+      <p class="text-gray-700 text-sm font-medium truncate">
+        <span class="font-semibold text-gray-600">Total Income:</span> ₦${plan.totalIncome}
+      </p>
+      <p class="text-gray-700 text-sm font-medium truncate">
+        <span class="font-semibold text-gray-600">Price:</span> ₦${plan.price.toLocaleString()}
+      </p>
+
+      <p class="mt-1">
+        <span class="inline-block font-semibold px-3 py-1 rounded-full text-xs text-white ${
           plan.status === "active" ? "bg-green-400" : "bg-gray-400"
-        } px-2 py-1 rounded-full capitalize">${plan.status}</p>
-      </span>
-      <span class="text-gray-500 w-1/6 cursor-pointer relative hover:bg-gray-100 group flex items-center justify-center w-8 h-8 border rounded-full">
-        <i class="fas fa-ellipsis-v"></i>
-        <span class="absolute z-10 flex flex-col top-6 -right-9 bg-white shadow-lg rounded-md scale-0 group-hover:scale-100 transition-all duration-300 p-2 gap-2">
-          <span class="flex items-center gap-2 border-b p-2 hover:text-blue-500 cursor-pointer hover:bg-blue-100 transition-all rounded-md duration-300 mb-2 editPlanBtn" data-id="${
-            plan._id
-          }">
-            <i class="fas fa-edit text-[10px]"></i>
-            <span class="text-[10px] font-semibold">Edit</span>
-          </span>
-          <span class="flex items-center gap-2 border-b p-2 rounded-md hover:text-red-500 cursor-pointer hover:bg-red-100 transition-all duration-300 deletePlanBtn" data-id="${
-            plan._id
-          }">
-            <i class="fas fa-trash text-[10px]"></i>
-            <span class="text-[10px] font-semibold">Delete</span>
-          </span>
+        }">${plan.status}</span>
+      </p>
+    </div>
+
+    <!-- Dropdown menu -->
+    <div class="relative group flex items-center justify-center">
+      <button
+        class="cursor-pointer hover:bg-gray-100 border rounded-full w-8 h-8 flex items-center justify-center transition"
+      >
+        <i class="fas fa-ellipsis-v text-gray-600"></i>
+      </button>
+
+      <div
+        class="absolute z-10 flex flex-col top-9 right-0 bg-white shadow-lg rounded-md scale-0 group-hover:scale-100 transition-transform duration-200 p-2 gap-1 w-28"
+      >
+        <span
+          class="flex items-center gap-2 border-b p-2 hover:text-blue-500 cursor-pointer hover:bg-blue-50 transition-all rounded-md editPlanBtn"
+          data-id="${plan._id}"
+        >
+          <i class="fas fa-edit text-[10px]"></i>
+          <span class="text-[10px] font-semibold">Edit</span>
         </span>
-      </span>
-    </div>`
+        <span
+          class="flex items-center gap-2 p-2 hover:text-red-500 cursor-pointer hover:bg-red-50 transition-all rounded-md deletePlanBtn"
+          data-id="${plan._id}"
+        >
+          <i class="fas fa-trash text-[10px]"></i>
+          <span class="text-[10px] font-semibold">Delete</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+      `
     )
     .join("");
 
@@ -611,24 +704,72 @@ async function getAllInvestments() {
         "w-full flex flex-col border-b hover:bg-gray-50 transition-all duration-300 p-4";
 
       card.innerHTML = `
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <span class="font-semibold text-gray-700">${inv.plan?.title || "N/A"}</span>
-          <span class="text-gray-600">${inv.user?.username || "Unknown User"}</span>
-          <span class="text-gray-600">₦${inv.amount || 0}</span>
-          <span class="text-gray-600">Profit: ₦${inv.profitEarned || 0}</span>
-          <span class="text-gray-600">${formatDate(inv.startDate)}</span>
-          <span class="text-gray-600">${formatDate(inv.endDate)}</span>
-          <span class="px-2 py-1 text-xs rounded-full ${
+        <div class="bg-white rounded-xl shadow-sm border p-4 mb-4 hover:shadow-md transition">
+
+  <!-- Top Info -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+    <div class="flex flex-col sm:flex-row sm:flex-wrap sm:gap-4 md:gap-6 text-sm text-gray-700">
+
+      <p class="font-semibold text-gray-800">
+        Title: <span class="font-normal">${inv.plan?.title || "N/A"}</span>
+      </p>
+
+      <p>
+        <span class="font-semibold text-gray-800">Username:</span>
+        ${inv.user?.username || "Unknown User"}
+      </p>
+
+      <p>
+        <span class="font-semibold text-gray-800">Amount Inv:</span>
+        ₦${inv.amount || 0}
+      </p>
+
+      <p>
+        <span class="font-semibold text-gray-800">Profit:</span>
+        ₦${inv.profitEarned || 0}
+      </p>
+
+      <p>
+        <span class="font-semibold text-gray-800">Start Date:</span>
+        ${formatDate(inv.startDate)}
+      </p>
+
+      <p>
+        <span class="font-semibold text-gray-800">End Date:</span>
+        ${formatDate(inv.endDate)}
+      </p>
+
+      <p>
+        <span
+          class="inline-block text-xs font-semibold px-3 py-1 rounded-full ${
             inv.status === "active"
               ? "bg-green-100 text-green-700"
               : "bg-gray-200 text-gray-700"
-          }">${inv.status}</span>
-        </div>
-        <div class="mt-2 text-sm text-gray-500">
-          <p><strong>User Phone:</strong> ${inv.user?.phoneNumber || "N/A"}</p>
-          <p class="hidden"><strong>Investment ID:</strong> ${inv._id}</p>
-          <p class="hidden"><strong>User ID:</strong> ${inv.user?._id || "N/A"}</p>
-        </div>
+          }"
+        >
+          ${inv.status}
+        </span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Bottom (extra info) -->
+  <div class="mt-3 border-t pt-3 text-sm text-gray-600 grid sm:grid-cols-2 gap-2">
+    <p>
+      <span class="font-semibold text-gray-700">User Phone:</span>
+      ${inv.user?.phoneNumber || "N/A"}
+    </p>
+    <p class="hidden">
+      <span class="font-semibold text-gray-700">Investment ID:</span>
+      ${inv._id}
+    </p>
+    <p class="hidden">
+      <span class="font-semibold text-gray-700">User ID:</span>
+      ${inv.user?._id || "N/A"}
+    </p>
+  </div>
+</div>
+
       `;
 
       investmentContainer.appendChild(card);
@@ -887,45 +1028,91 @@ settingsBtn.forEach((btn) => {
       d.proofOfPayment?.asset?.url || d.proofOfPayment?.url || "";
 
     row.innerHTML = `
-      <span class="text-gray-700 font-medium">${escapeText(d._id)}</span>
-      <span class="text-gray-700">${escapeText(d.user?.username || "—")}</span>
-      <span class="text-gray-700">₦${escapeText(d.amount ?? 0)}</span>
-      <span class="text-gray-700">${escapeText(d.balanceType || "—")}</span>
-      <span class="text-gray-700">${formatDate(d.fundedAt)}</span>
-      <span class="text-gray-700">${escapeText(d.senderName || "—")}</span>
-      <span class="px-2 py-1 text-xs rounded-full ${statusBadgeClass(
-        d.status
-      )}">${escapeText(d.status)}</span>
+    <div class="bg-white rounded-xl shadow-sm border p-4 mb-4 hover:shadow-md transition">
 
-      <span class="relative flex items-center justify-center w-8 h-8 border rounded-full cursor-pointer action-toggle" data-id="${
-        d._id
-      }">
+  <!-- Top Summary -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+
+    <div class="flex flex-col sm:flex-row sm:flex-wrap sm:gap-4 text-sm text-gray-700">
+      <span class="hidden font-medium">${escapeText(d._id)}</span>
+
+      <p class="font-semibold text-gray-800">
+        Username: <span class="font-normal">${escapeText(d.user?.username || "—")}</span>
+      </p>
+
+      <p>
+        <span class="font-semibold text-gray-800">Amount:</span>
+        ₦${escapeText(d.amount ?? 0)}
+      </p>
+
+      <p>
+        <span class="font-semibold text-gray-800">Bal Type:</span>
+        ${escapeText(d.balanceType || "—")}
+      </p>
+
+      <p>
+        <span class="font-semibold text-gray-800">Date:</span>
+        ${formatDate(d.fundedAt)}
+      </p>
+
+      <p>
+        <span class="font-semibold text-gray-800">Sender:</span>
+        ${escapeText(d.senderName || "—")}
+      </p>
+
+      <p>
+        <span
+          class="inline-block text-xs font-semibold px-3 py-1 rounded-full ${statusBadgeClass(
+            d.status
+          )}"
+        >
+          ${escapeText(d.status)}
+        </span>
+      </p>
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div class="relative group flex items-center justify-center">
+      <button
+        class="action-toggle cursor-pointer hover:bg-gray-100 border rounded-full w-8 h-8 flex items-center justify-center transition"
+        data-id="${d._id}"
+      >
         <i class="fas fa-ellipsis-v text-gray-600"></i>
-        <div class="absolute top-8 right-0 z-10 w-36 bg-white shadow-lg rounded-md hidden p-2 card-dropdown">
-          <div class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-green-100 editBtn-deposit" data-id="${
-            d._id
-          }">Edit</div>
-          <div class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-blue-100 expandBtn" data-id="${
-            d._id
-          }">Expand</div>
-        </div>
-      </span>
-    `;
+      </button>
 
-    const details = document.createElement("div");
-    details.className = "hidden px-6 pb-4 text-sm text-gray-600 bg-gray-50";
-    details.innerHTML = `
-      <p><strong>User phone:</strong> ${escapeText(
-        d.user?.phoneNumber || "—"
-      )}</p>
-      <p><strong>Proof of payment:</strong></p>
-      <div class="mt-2">
-        ${
-          proofUrl
-            ? `<img src="${proofUrl}" alt="proof" class="max-w-xs border rounded" onerror="this.style.display='none'"/>`
-            : `<span class="text-gray-500">No proof provided</span>`
-        }
+      <div
+        class="absolute top-9 right-0 z-10 w-36 bg-white shadow-lg rounded-md hidden p-2 card-dropdown group-hover:block transition-all duration-200"
+      >
+        <div
+          class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-green-100 editBtn-deposit"
+          data-id="${d._id}"
+        >
+          Edit
+        </div>
+        <div
+          class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-blue-100 expandBtn"
+          data-id="${d._id}"
+        >
+          Expand
+        </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Expandable Details -->
+  <div class="hidden mt-3 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
+    <p><strong>User Phone:</strong> ${escapeText(d.user?.phoneNumber || "—")}</p>
+    <p><strong>Proof of Payment:</strong></p>
+    <div class="mt-2">
+      ${
+        proofUrl
+          ? `<img src="${proofUrl}" alt="proof" class="max-w-xs border rounded" onerror="this.style.display='none'"/>`
+          : `<span class="text-gray-500">No proof provided</span>`
+      }
+    </div>
+  </div>
+</div>
+
     `;
 
     card.appendChild(row);
@@ -966,48 +1153,65 @@ settingsBtn.forEach((btn) => {
   // --- CREATE WITHDRAWAL CARD ---
   function createWithdrawalCard(w) {
     const card = document.createElement("div");
-    card.className =
-      "w-full flex flex-col border-b hover:bg-gray-50 transition-all duration-200";
+card.className = `
+  w-full sm:w-[48%] lg:w-[32%] bg-white border border-gray-200 
+  rounded-xl shadow-sm p-4 mb-4 flex flex-col justify-between 
+  hover:shadow-lg transition-all duration-200
+`;
 
-    const row = document.createElement("div");
-    row.className = "w-full flex p-4 items-center justify-between";
-    row.innerHTML = `
-      <span class="text-gray-700 font-medium">${escapeText(w._id)}</span>
-      <span class="text-gray-700">${escapeText(w.user?.username || "—")}</span>
-      <span class="text-gray-700">₦${escapeText(w.amount ?? 0)}</span>
-      <span class="text-gray-700">${escapeText(w.balanceType || "—")}</span>
-      <span class="text-gray-700">${formatDate(w.withdrawnAt)}</span>
-      <span class="px-2 py-1 text-xs rounded-full ${statusBadgeClass(
-        w.status
-      )}">${escapeText(w.status)}</span>
+const row = document.createElement("div");
+row.className = "flex flex-col gap-2";
+row.innerHTML = `
+  <div class="flex flex-wrap justify-between items-center">
+    <span class="hidden text-gray-700 font-medium">${escapeText(w._id)}</span>
+    <span class="font-semibold text-gray-800">${escapeText(w.user?.username || "—")}</span>
+    <span class="px-2 py-1 text-xs rounded-full ${statusBadgeClass(w.status)}">
+      ${escapeText(w.status)}
+    </span>
+  </div>
 
-      <span class="relative flex items-center justify-center w-8 h-8 border rounded-full cursor-pointer action-toggle" data-id="${
-        w._id
-      }">
-        <i class="fas fa-ellipsis-v text-gray-600"></i>
-        <div class="absolute top-8 right-0 z-10 w-36 bg-white shadow-lg rounded-md hidden p-2 card-dropdown">
-          <div class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-green-100 editBtn-withdrawal" data-id="${
-            w._id
-          }">Edit</div>
-          <div class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-blue-100 expandBtn" data-id="${
-            w._id
-          }">Expand</div>
-        </div>
-      </span>
-    `;
+  <div class="grid grid-cols-2 gap-y-2 text-sm text-gray-600 mt-2">
+    <p><strong>Amount:</strong> ₦${escapeText(w.amount ?? 0)}</p>
+    <p><strong>Bal type:</strong> ${escapeText(w.balanceType || "—")}</p>
+    <p><strong>Date:</strong> ${formatDate(w.withdrawnAt)}</p>
+  </div>
 
-    const details = document.createElement("div");
-    details.className = "hidden px-6 pb-4 text-sm text-gray-600 bg-gray-50";
-    details.innerHTML = `
-      <p><strong>User phone:</strong> ${escapeText(
-        w.user?.phoneNumber || "—"
-      )}</p>
-      <p><strong>Account status:</strong> ${escapeText(
-        w.user?.accountStatus || "—"
-      )}</p>
-      <p><strong>Net amount:</strong> ${w.netAmount || 0.00}</p>
-      <p><strong>Platform fee:</strong> ${w.platformFee || 0.00}</p>
-    `;
+  <div class="flex justify-end mt-3 relative">
+    <button 
+      class="flex items-center justify-center w-8 h-8 border rounded-full cursor-pointer action-toggle" 
+      data-id="${w._id}"
+    >
+      <i class="fas fa-ellipsis-v text-gray-600"></i>
+    </button>
+
+    <div class="absolute top-10 right-0 z-20 w-36 bg-white shadow-lg rounded-md hidden p-2 card-dropdown">
+      <div 
+        class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-green-100 editBtn-withdrawal" 
+        data-id="${w._id}"
+      >
+        Edit
+      </div>
+      <div 
+        class="px-2 py-1 text-sm text-gray-600 rounded-md cursor-pointer hover:bg-blue-100 expandBtn" 
+        data-id="${w._id}"
+      >
+        Expand
+      </div>
+    </div>
+  </div>
+`;
+
+const details = document.createElement("div");
+details.className = `
+  hidden mt-3 p-3 bg-gray-50 rounded-lg text-sm text-gray-700 
+  border border-gray-100 space-y-1
+`;
+details.innerHTML = `
+  <p><strong>User phone:</strong> ${escapeText(w.user?.phoneNumber || "—")}</p>
+  <p><strong>Account status:</strong> ${escapeText(w.user?.accountStatus || "—")}</p>
+  <p><strong>Net amount:</strong> ₦${w.netAmount || 0.00}</p>
+  <p><strong>Platform fee:</strong> ₦${w.platformFee || 0.00}</p>
+`;
     card.appendChild(row);
     card.appendChild(details);
 
