@@ -58,7 +58,7 @@ async function loadAdminStats() {
   } catch (error) {
     console.error("Error fetching dashboard analytics:", error);
     alert("Error fetching dashboard analytics.");
-    window.location.href = "login.html";
+    // window.location.href = "login.html";
   }
 
   // get admin info
@@ -81,12 +81,12 @@ async function loadAdminStats() {
     } else {
       console.error("error fetching admin details", data.message);
       alert("error fetching admin details");
-      window.location.href = "login.html";
+      // window.location.href = "login.html";
     }
   } catch (error) {
     console.error("error fetching admin details", error);
     alert("unable to fetch admin details");
-    window.location.href = "login.html";
+    // window.location.href = "login.html";
   }
 }
 window.addEventListener("DOMContentLoaded", loadAdminStats);
@@ -304,19 +304,33 @@ searchInput.addEventListener("input", (e) => {
   usersContainer.addEventListener("click", async (e) => {
   
 e.preventDefault();
+// const expandBtn = e.target.closest(".expandUserBtn");
+//   if (expandBtn) {
+//     const userRow = expandBtn.closest("div").parentElement;
+//     const extraSection = userRow.querySelector(".user-extra");
+
+//     // toggle visibility
+//     extraSection.classList.toggle("hidden");
+
+//     // toggle arrow direction
+//     const icon = expandBtn.querySelector("i");
+//     icon.classList.toggle("fa-chevron-down");
+//     icon.classList.toggle("fa-chevron-up");
+//   }
 const expandBtn = e.target.closest(".expandUserBtn");
-  if (expandBtn) {
-    const userRow = expandBtn.closest("div").parentElement;
-    const extraSection = userRow.querySelector(".user-extra");
+if (expandBtn) {
+  const userRow = expandBtn.closest(".w-full"); // FIXED
+  const extraSection = userRow.querySelector(".user-extra");
 
-    // toggle visibility
+  if (extraSection) {
     extraSection.classList.toggle("hidden");
-
-    // toggle arrow direction
-    const icon = expandBtn.querySelector("i");
-    icon.classList.toggle("fa-chevron-down");
-    icon.classList.toggle("fa-chevron-up");
   }
+
+  // toggle arrow
+  const icon = expandBtn.querySelector("i");
+  icon.classList.toggle("fa-chevron-down");
+  icon.classList.toggle("fa-chevron-up");
+}
 
 
   const editBtn = e.target.closest(".editUserBtn");
@@ -1100,7 +1114,7 @@ settingsBtn.forEach((btn) => {
   </div>
 
   <!-- Expandable Details -->
-  <div class="hidden mt-3 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
+  <div class="hidden details mt-3 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
     <p><strong>User Phone:</strong> ${escapeText(d.user?.phoneNumber || "—")}</p>
     <p><strong>Proof of Payment:</strong></p>
     <div class="mt-2">
@@ -1114,7 +1128,7 @@ settingsBtn.forEach((btn) => {
 </div>
 
     `;
-
+const details = row.querySelector(".details")
     card.appendChild(row);
     card.appendChild(details);
 
